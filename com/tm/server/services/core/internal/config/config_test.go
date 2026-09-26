@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/toanmai8195/snaptix/com/tm/server/pkg/otelx"
 )
 
 func env(m map[string]string) func(string) string {
@@ -16,7 +18,8 @@ func TestLoad_Defaults(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load: %v", err)
 	}
-	want := Config{HTTPAddr: ":8080", DatabaseURL: defaultDatabaseURL, LogLevel: slog.LevelInfo, ShutdownTimeout: 15 * time.Second}
+	want := Config{HTTPAddr: ":8080", DatabaseURL: defaultDatabaseURL, LogLevel: slog.LevelInfo, ShutdownTimeout: 15 * time.Second,
+		OTel: otelx.Config{ServiceName: "core", ServiceVersion: "dev", Endpoint: "http://localhost:4318", MetricInterval: 10 * time.Second}}
 	if cfg != want {
 		t.Fatalf("Load() = %+v, muốn %+v", cfg, want)
 	}

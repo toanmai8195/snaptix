@@ -12,9 +12,6 @@ import (
 	"syscall"
 	"time"
 
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
-
 	"github.com/toanmai8195/snaptix/com/tm/server/pkg/otelx"
 	"github.com/toanmai8195/snaptix/com/tm/server/pkg/postgres"
 	"github.com/toanmai8195/snaptix/com/tm/server/services/core/internal/config"
@@ -38,8 +35,6 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("config: %w", err)
 	}
 	log := otelx.NewLogger(os.Stdout, cfg.LogLevel, "core")
-	// Đọc/ghi traceparent (W3C) để trace_id xuyên service; SDK exporter thêm ở P0-T10.
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
 	pool, err := postgres.NewPool(ctx, cfg.DatabaseURL)
 	if err != nil {
@@ -49,6 +44,19 @@ func run(ctx context.Context) error {
 	defer func() {
 		pool.Close()
 		log.Info("database pool closed")
+	}()
+
+	// OpenTelemetry: defer đăng ký sau pool nên chạy trước — flush span của request cuối trước khi đóng DB.
+	otelShutdown, err := otelx.Setup(ctx, cfg.OTel, log)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		sctx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 5*time.Second)
+		defer cancel()
+		if err := otelShutdown(sctx); err != nil {
+			log.Warn("opentelemetry shutdown", slog.Any("error", err))
+		}
 	}()
 
 	ln, err := net.Listen("tcp", cfg.HTTPAddr)

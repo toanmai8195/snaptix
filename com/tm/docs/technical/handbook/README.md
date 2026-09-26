@@ -37,6 +37,7 @@ handbook/
 | P0-T07 | Skeleton core service | [phase-0/P0-T07.md](phase-0/P0-T07.md) |
 | P0-T08 | Middleware request ID, recover, access log, OTel HTTP | [phase-0/P0-T08.md](phase-0/P0-T08.md) |
 | P0-T09 | Graceful shutdown cho core | [phase-0/P0-T09.md](phase-0/P0-T09.md) |
+| P0-T10 | OpenTelemetry SDK, export OTLP | [phase-0/P0-T10.md](phase-0/P0-T10.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -72,6 +73,8 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `go/http` `go/testing` | P0-T08 | Khoá header được chuẩn hoá — dùng Header.Add; test OTel bằng SDK in-memory | [P0-T08](phase-0/P0-T08.md#header-go-được-chuẩn-hoá-khoá) |
 | `go/context` `go/http` | P0-T09 | signal.NotifyContext; Shutdown với context.WithoutCancel; ErrServerClosed | [P0-T09](phase-0/P0-T09.md#httpservershutdown-và-contextwithoutcancel) |
 | `go/testing` | P0-T09 | Truyền net.Listener (:0) để test shutdown bằng TCP thật | [P0-T09](phase-0/P0-T09.md#truyền-netlistener-để-test-shutdown-thật) |
+| `otel` | P0-T10 | Provider global (proxy), flush khi dừng, ErrorHandler, biến OTEL_* | [P0-T10](phase-0/P0-T10.md#batchspanprocessor--periodicreader--phải-flush-khi-dừng) |
+| `otel` `pg` | P0-T10 | Decorator QueryTracer: trace PG chỉ khi có span cha | [P0-T10](phase-0/P0-T10.md#trace-pg-chỉ-khi-có-span-cha) |
 
 ## Mẫu một file
 

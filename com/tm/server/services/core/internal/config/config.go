@@ -17,6 +17,7 @@ type Config struct {
 	LogLevel    slog.Level
 	// ShutdownTimeout: thời gian tối đa chờ request đang chạy khi dừng service.
 	ShutdownTimeout time.Duration
+	OTel            otelx.Config
 }
 
 const (
@@ -46,6 +47,10 @@ func Load(getenv func(string) string) (Config, error) {
 		} else {
 			cfg.ShutdownTimeout = d
 		}
+	}
+	cfg.OTel, err = otelx.ConfigFromEnv("core", or(getenv("CORE_VERSION"), "dev"), getenv)
+	if err != nil {
+		errs = append(errs, err)
 	}
 	return cfg, errors.Join(errs...)
 }

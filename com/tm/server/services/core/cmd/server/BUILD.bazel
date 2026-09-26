@@ -11,8 +11,6 @@ go_library(
         "//pkg/postgres",
         "//services/core/internal/config",
         "//services/core/internal/httpx",
-        "@io_opentelemetry_go_otel//:otel",
-        "@io_opentelemetry_go_otel//propagation",
     ],
 )
 

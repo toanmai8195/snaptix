@@ -41,6 +41,10 @@ Sao chép `.env.example` thành `.env` ở mỗi app/service.
 | `CORE_DATABASE_URL` | core | `postgres://snaptix:snaptix@localhost:5432/core?sslmode=disable` (mặc định) |
 | `LOG_LEVEL` | core | `debug` \| `info` (mặc định) \| `warn` \| `error` |
 | `CORE_SHUTDOWN_TIMEOUT` | core | `15s` (mặc định) — thời gian chờ request đang chạy khi nhận SIGTERM |
+| `CORE_VERSION` | core | `dev` (mặc định) — `service.version` trong telemetry |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | core, bff | `http://localhost:4318` (mặc định) |
+| `OTEL_SDK_DISABLED` | core, bff | `true` để tắt export |
+| `OTEL_METRIC_EXPORT_INTERVAL` | core, bff | `10000` (ms, mặc định) |
 | `ANALYTICS_DATABASE_URL` | stats-worker, bff | `postgres://snaptix:snaptix@localhost:5433/analytics` |
 | `REDIS_URL` | core, bff | `redis://localhost:6379` |
 | `MONGODB_URI` | bff | `mongodb://localhost:27017/snaptix` |
