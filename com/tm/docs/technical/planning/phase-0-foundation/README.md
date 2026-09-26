@@ -95,7 +95,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `feat(core): service skeleton with config, slog JSON, chi, pgxpool, health and metrics [P0-T07]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [ ] **P0-T08** Middleware: request ID, recover, access log, OTel HTTP
+- [x] **P0-T08** Middleware: request ID, recover, access log, OTel HTTP
+  - [x] 1. Test case: P0-T08-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `feat(core): request ID, recover, access log and OTel HTTP middleware [P0-T08]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 - [ ] **P0-T09** Graceful shutdown: bắt SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
 - [ ] **P0-T10** Tích hợp OpenTelemetry SDK trong `pkg/otelx`, export OTLP `[G10]`
 - [ ] **P0-T10a** Image OCI cho core: dùng macro `com_tm_go_image` (có từ P0-T01a) cho `cmd/server`, `cmd/worker` `[G14]`

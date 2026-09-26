@@ -55,7 +55,7 @@ func TestHealthAndReady(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			start := time.Now()
-			code, m, body := do(t, NewRouter(log, tt.db), tt.path)
+			code, m, body := do(t, NewRouter(Deps{Log: log, DB: tt.db}), tt.path)
 			if code != tt.wantCode || m["status"] != tt.wantStatus {
 				t.Fatalf("%s = %d %s; muốn %d status=%s", tt.path, code, body, tt.wantCode, tt.wantStatus)
 			}
@@ -67,7 +67,7 @@ func TestHealthAndReady(t *testing.T) {
 }
 
 func TestMetricsAndNotFound(t *testing.T) {
-	h := NewRouter(slog.New(slog.NewTextHandler(io.Discard, nil)), pingOK)
+	h := NewRouter(Deps{Log: slog.New(slog.NewTextHandler(io.Discard, nil)), DB: pingOK})
 
 	code, _, body := do(t, h, "/metrics")
 	if code != http.StatusOK || !strings.Contains(body, "go_goroutines") {

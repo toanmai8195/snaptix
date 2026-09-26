@@ -9,6 +9,9 @@ import (
 	"os"
 	"time"
 
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
+
 	"github.com/toanmai8195/snaptix/com/tm/server/pkg/otelx"
 	"github.com/toanmai8195/snaptix/com/tm/server/pkg/postgres"
 	"github.com/toanmai8195/snaptix/com/tm/server/services/core/internal/config"
@@ -28,6 +31,8 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("config: %w", err)
 	}
 	log := otelx.NewLogger(os.Stdout, cfg.LogLevel, "core")
+	// Đọc/ghi traceparent (W3C) để trace_id xuyên service; SDK exporter thêm ở P0-T10.
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
 	pool, err := postgres.NewPool(ctx, cfg.DatabaseURL)
 	if err != nil {
@@ -37,7 +42,7 @@ func run(ctx context.Context) error {
 
 	srv := &http.Server{
 		Addr:              cfg.HTTPAddr,
-		Handler:           httpx.NewRouter(log, pool),
+		Handler:           httpx.NewRouter(httpx.Deps{Log: log, DB: pool}),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 	log.InfoContext(ctx, "core started", slog.String("addr", cfg.HTTPAddr))

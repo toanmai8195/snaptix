@@ -2,9 +2,12 @@ package otelx
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"log/slog"
 	"testing"
+
+	"go.opentelemetry.io/otel/trace"
 )
 
 func TestParseLevel(t *testing.T) {
@@ -59,5 +62,32 @@ func TestNewLogger_JSONOneLine(t *testing.T) {
 	}
 	if _, ok := rec["time"]; !ok {
 		t.Error("thiếu trường time")
+	}
+}
+
+func TestNewLogger_CorrelationIDs(t *testing.T) {
+	var buf bytes.Buffer
+	log := NewLogger(&buf, slog.LevelInfo, "core").With(slog.String("component", "test"))
+
+	tid, _ := trace.TraceIDFromHex("4bf92f3577b34da6a3ce929d0e0e4736")
+	sid, _ := trace.SpanIDFromHex("00f067aa0ba902b7")
+	ctx := trace.ContextWithSpanContext(context.Background(),
+		trace.NewSpanContext(trace.SpanContextConfig{TraceID: tid, SpanID: sid, TraceFlags: trace.FlagsSampled}))
+	ctx = WithRequestID(ctx, "req-9")
+
+	log.InfoContext(ctx, "có ID")
+	log.Info("không context")
+
+	lines := bytes.Split(bytes.TrimSpace(buf.Bytes()), []byte("\n"))
+	var with, without map[string]any
+	_ = json.Unmarshal(lines[0], &with)
+	_ = json.Unmarshal(lines[1], &without)
+	if with["trace_id"] != tid.String() || with["span_id"] != sid.String() || with["request_id"] != "req-9" || with["component"] != "test" {
+		t.Fatalf("thiếu ID tương quan: %v", with)
+	}
+	for _, k := range []string{"trace_id", "span_id", "request_id"} {
+		if _, ok := without[k]; ok {
+			t.Errorf("log không có context không được có %s", k)
+		}
 	}
 }

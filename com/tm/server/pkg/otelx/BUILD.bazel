@@ -2,13 +2,18 @@ load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "otelx",
-    srcs = ["log.go"],
+    srcs = [
+        "correlation.go",
+        "log.go",
+    ],
     importpath = "github.com/toanmai8195/snaptix/com/tm/server/pkg/otelx",
     visibility = ["//visibility:public"],
+    deps = ["@io_opentelemetry_go_otel_trace//:trace"],
 )
 
 go_test(
     name = "otelx_test",
     srcs = ["log_test.go"],
     embed = [":otelx"],
+    deps = ["@io_opentelemetry_go_otel_trace//:trace"],
 )
