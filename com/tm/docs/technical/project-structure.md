@@ -225,10 +225,14 @@ Kiểm tra cái giá của việc dùng chung: `bazel query 'rdeps(//..., //pkg/
 
 ## CI
 
+Workflow `.github/workflows/ci.yml` chỉ gọi script trong `scripts/ci/` — chạy y hệt ở local: `scripts/ci/run.sh repo|server|app [BASE]`.
+
 | Thay đổi | Chạy |
 |---|---|
-| `com/tm/server/**` | `bazel test` các target bị ảnh hưởng |
-| `com/tm/app/**` | `pnpm --filter "...[origin/main]" lint test build` |
+| Mọi thay đổi | Job `repo`: check-structure, check-gitignore, check-migrations, test script |
+| `com/tm/server/**` | Job `server`: gazelle `-mode=diff`, golangci-lint v2.6.2, `bazel build //...`, `bazel test` các target bị ảnh hưởng (`scripts/ci/bazel-affected-tests.sh`, dựa trên `rdeps`) |
+| `com/tm/app/**` | Job `app`: `pnpm install --frozen-lockfile`, `pnpm --filter "...[BASE]" lint test build` |
+| `.github/**`, `scripts/ci/**` | Cả `server` và `app` |
 | `com/tm/server/api/**`, `com/tm/app/api/**` | Cả hai + sinh lại code và `git diff --exit-code` |
 | `com/tm/docs/**` | Kiểm tra link markdown |
 

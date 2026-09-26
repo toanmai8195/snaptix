@@ -31,6 +31,7 @@ handbook/
 | P0-T01b | pnpm workspace cho com/tm/app | [phase-0/P0-T01b.md](phase-0/P0-T01b.md) |
 | P0-T02 | docker-compose hạ tầng local | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
 | P0-T03 | goose migration cho PG core và analytics | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
+| P0-T04 | CI GitHub Actions theo đường dẫn thay đổi | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -52,6 +53,9 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `docker/compose` `testing` | P0-T02 | Test compose với project riêng để không phá dữ liệu dev | [P0-T02](phase-0/P0-T02.md#test-compose-không-phá-dữ-liệu-dev) |
 | `go/tooling` | P0-T03 | Pin công cụ bằng `go run pkg@version` + build tag; GOTOOLCHAIN=local chặn tự tải toolchain | [P0-T03](phase-0/P0-T03.md#bẫy-dependency-yêu-cầu-go-mới-hơn--tự-tải-toolchain) |
 | `pg/migration` | P0-T03 | goose: version của DB vs công cụ; migration tuần tự, luôn có Down | [P0-T03](phase-0/P0-T03.md#quy-ước-migration-đánh-số-tuần-tự-luôn-có-down) |
+| `ci` `github-actions` | P0-T04 | Workflow mỏng, logic trong script test được; base PR vs push; tránh script injection | [P0-T04](phase-0/P0-T04.md#workflow-mỏng-logic-trong-script) |
+| `bazel` `ci` | P0-T04 | Test bị ảnh hưởng bằng `rdeps`; `bazel test` exit 4 khi không có test | [P0-T04](phase-0/P0-T04.md#bazel-chỉ-test-target-bị-ảnh-hưởng-bằng-rdeps) |
+| `bazel` `gazelle` `ci` | P0-T04 | `gazelle -mode=diff` chặn BUILD.bazel lỗi thời | [P0-T04](phase-0/P0-T04.md#gazelle--modediff-giữ-buildbazel-luôn-cập-nhật) |
 
 ## Mẫu một file
 
