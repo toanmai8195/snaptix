@@ -32,6 +32,7 @@ handbook/
 | P0-T02 | docker-compose hạ tầng local | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
 | P0-T03 | goose migration cho PG core và analytics | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
 | P0-T04 | CI GitHub Actions theo đường dẫn thay đổi | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
+| P0-T05 | Makefile cho các thao tác thường dùng | [phase-0/P0-T05.md](phase-0/P0-T05.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -56,6 +57,7 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `ci` `github-actions` | P0-T04 | Workflow mỏng, logic trong script test được; base PR vs push; tránh script injection | [P0-T04](phase-0/P0-T04.md#workflow-mỏng-logic-trong-script) |
 | `bazel` `ci` | P0-T04 | Test bị ảnh hưởng bằng `rdeps`; `bazel test` exit 4 khi không có test | [P0-T04](phase-0/P0-T04.md#bazel-chỉ-test-target-bị-ảnh-hưởng-bằng-rdeps) |
 | `bazel` `gazelle` `ci` | P0-T04 | `gazelle -mode=diff` chặn BUILD.bazel lỗi thời | [P0-T04](phase-0/P0-T04.md#gazelle--modediff-giữ-buildbazel-luôn-cập-nhật) |
+| `make` | P0-T05 | `make help` từ comment `##`; `$$` trong recipe; biến `PROJECT ?=` | [P0-T05](phase-0/P0-T05.md#make-help-tự-sinh-từ-comment-) |
 
 ## Mẫu một file
 

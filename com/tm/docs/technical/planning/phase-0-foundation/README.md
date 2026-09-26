@@ -72,7 +72,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `ci: path-filtered GitHub Actions with affected bazel tests [P0-T04][G14]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [ ] **P0-T05** Makefile / script: `make up`, `make migrate`, `make test`
+- [x] **P0-T05** Makefile / script: `make up`, `make migrate`, `make test`
+  - [x] 1. Test case: P0-T05-TC01..TC05 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build: Makefile for infra, migrations and CI checks [P0-T05]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 - [ ] **P0-T06** Dashboard Grafana cơ bản: RED metrics cho mỗi service
 
 ### core

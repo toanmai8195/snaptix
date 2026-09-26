@@ -14,12 +14,9 @@
 ```bash
 git clone <repo-url> snaptix && cd snaptix
 
-# 1. Hạ tầng: postgres (core + analytics), mongodb, redis, observability
-docker compose -f deploy/docker-compose.yml up -d --wait
-
-# 2. Migration
-scripts/migrate.sh core up
-scripts/migrate.sh analytics up
+# 1 + 2. Hạ tầng + migration (xem `make` để biết mọi lệnh)
+make up        # = docker compose -f deploy/docker-compose.yml up -d --wait
+make migrate   # = scripts/migrate.sh core up && scripts/migrate.sh analytics up
 # tạo migration mới: scripts/migrate.sh core create <ten> sql   (đánh số tuần tự)
 
 # 3. Server (Go) — chạy trực tiếp bằng go khi dev
@@ -67,6 +64,8 @@ Sao chép `.env.example` thành `.env` ở mỗi app/service.
 | Grafana (đăng nhập ẩn danh, quyền Admin) | 3100 |
 
 ## Build & kiểm thử
+
+`make test` chạy đúng các bước CI (`scripts/ci/run.sh repo|server|app`). Chi tiết từng phần:
 
 ```bash
 # Server
