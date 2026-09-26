@@ -36,8 +36,14 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 3. Unit test
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(infra): scaffold monorepo directories and repo checks [P0-T01]` · Push: không
-- [ ] **P0-T01a** `com/tm/server`: `MODULE.bazel` (rules_go, gazelle, rules_oci), `.bazelversion`, một `go.mod`, target `//:gazelle` với `gazelle:prefix` và `go_naming_convention import` `[G14]`
+  - [x] 6. Commit: `feat(infra): scaffold monorepo directories and repo checks [P0-T01]` · Push: có
+- [x] **P0-T01a** `com/tm/server`: `MODULE.bazel` (rules_go, gazelle, rules_oci), `.bazelversion`, `.bazelrc`, một `go.mod`, target `//:gazelle` với `gazelle:prefix` và `go_naming_convention import`; macro `com_tm_go_image` (`tools/rules`) build binary + OCI image distroless, gazelle `map_kind` cho `go_binary` (theo repo thor) `[G14]`
+  - [x] 1. Test case: P0-T01a-TC01..TC07 — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build(server): bazel + go module + com_tm_go_image OCI macro [P0-T01a][G14]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 - [ ] **P0-T01b** `com/tm/app`: `pnpm-workspace.yaml`, `package.json` gốc, script `dev`/`build`/`test` chạy theo filter
 - [ ] **P0-T02** `deploy/docker-compose.yml`: PG core (5432), PG analytics (5433), MongoDB, Redis, otel-collector, Prometheus, Grafana, Tempo/Jaeger
 - [ ] **P0-T03** Cấu hình goose, thư mục `com/tm/server/db/core/migrations`, `com/tm/server/db/analytics/migrations`, migration rỗng đầu tiên
@@ -50,7 +56,7 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 - [ ] **P0-T08** Middleware: request ID, recover, access log, OTel HTTP
 - [ ] **P0-T09** Graceful shutdown: bắt SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
 - [ ] **P0-T10** Tích hợp OpenTelemetry SDK trong `pkg/otelx`, export OTLP `[G10]`
-- [ ] **P0-T10a** Image OCI cho core bằng `rules_oci` (distroless) `[G14]`
+- [ ] **P0-T10a** Image OCI cho core: dùng macro `com_tm_go_image` (có từ P0-T01a) cho `cmd/server`, `cmd/worker` `[G14]`
 
 ### bff
 - [ ] **P0-T11** Skeleton `com/tm/app/apps/bff` Fastify + TS (ESM, strict, `tsx` khi dev, `tsup` khi build): plugin config, logger pino JSON, `/healthz`, `/readyz`
@@ -71,7 +77,7 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 |---|---|---|---|---|---|---|
 | G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | ⬜ |
 | G10 | Golang | Observability | Debug trên nhiều service | OpenTelemetry trace, slog JSON, Prometheus metrics | Một trace hiển thị đủ BFF → core → PG | ⬜ |
-| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng | ⬜ |
+| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng | 🟨 |
 
 ## Definition of Done
 

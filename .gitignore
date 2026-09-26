@@ -152,6 +152,8 @@ bazel-*
 *.test
 *.prof
 cover.html
+# Bazel: cấu hình cá nhân (try-import trong .bazelrc)
+.bazelrc.user
 # Go build output
 /com/tm/server/bin/
 

@@ -9,8 +9,8 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 MUST_IGNORE=(
-  com/tm/server/bazel-out/x
-  com/tm/server/bazel-bin/x
+  com/tm/server/bazel-out   # symlink do Bazel tạo; không kiểm tra đường dẫn bên trong symlink
+  com/tm/server/bazel-bin
   com/tm/app/node_modules/x
   com/tm/app/apps/bff/dist/x
   com/tm/app/apps/web-client/dist/x

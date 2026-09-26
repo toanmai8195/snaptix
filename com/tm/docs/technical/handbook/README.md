@@ -27,6 +27,7 @@ handbook/
 | Task | Tên | File |
 |---|---|---|
 | P0-T01 | Khởi tạo cấu trúc thư mục monorepo | [phase-0/P0-T01.md](phase-0/P0-T01.md) |
+| P0-T01a | Bazel + Go module + macro build image | [phase-0/P0-T01a.md](phase-0/P0-T01a.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -37,6 +38,10 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `git` | P0-T01 | Git không track thư mục rỗng; mô phỏng clone trước commit bằng index tạm | [phase-0](phase-0/P0-T01.md#git-chỉ-theo-dõi-file-không-theo-dõi-thư-mục) |
 | `git` | P0-T01 | Thứ tự pattern phủ định trong `.gitignore`; `git check-ignore --no-index` | [phase-0](phase-0/P0-T01.md#thứ-tự-pattern-trong-gitignore-và-git-check-ignore) |
 | `bash` | P0-T01 | Tương thích bash 3.2 (không `mapfile`); `$pipestatus` trong zsh | [phase-0](phase-0/P0-T01.md#shell-script-chạy-được-trên-bash-32-của-macos) |
+| `bazel` `go/modules` | P0-T01a | Dependency Go từ go.mod qua go_deps; thứ tự go get → bazel mod tidy → gazelle | [P0-T01a](phase-0/P0-T01a.md#bzlmod-dependency-go-lấy-thẳng-từ-gomod) |
+| `bazel` `gazelle` | P0-T01a | Naming convention import; map_kind go_binary → macro | [P0-T01a](phase-0/P0-T01a.md#gazelle-prefix-naming-convention-và-map_kind) |
+| `bazel` `oci` | P0-T01a | Binary tĩnh + distroless, pin digest, cross-build theo --config | [P0-T01a](phase-0/P0-T01a.md#macro-com_tm_go_image-binary-tĩnh--oci-image-distroless) |
+| `git` `bazel` | P0-T01a | git check-ignore không đi xuyên symlink bazel-out | [P0-T01a](phase-0/P0-T01a.md#git-check-ignore-và-symlink-của-bazel) |
 
 ## Mẫu một file
 
