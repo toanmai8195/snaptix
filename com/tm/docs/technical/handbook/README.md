@@ -34,6 +34,7 @@ handbook/
 | P0-T04 | CI GitHub Actions theo đường dẫn thay đổi | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
 | P0-T05 | Makefile cho các thao tác thường dùng | [phase-0/P0-T05.md](phase-0/P0-T05.md) |
 | P0-T06 | Dashboard Grafana RED metrics | [phase-0/P0-T06.md](phase-0/P0-T06.md) |
+| P0-T07 | Skeleton core service | [phase-0/P0-T07.md](phase-0/P0-T07.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -61,6 +62,9 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `make` | P0-T05 | `make help` từ comment `##`; `$$` trong recipe; biến `PROJECT ?=` | [P0-T05](phase-0/P0-T05.md#make-help-tự-sinh-từ-comment-) |
 | `observability` `prometheus` | P0-T06 | RED từ metric OTel `http.server.request.duration`; tên sau collector; clamp_min, sum by le | [P0-T06](phase-0/P0-T06.md#red-và-hợp-đồng-metric-opentelemetry) |
 | `otel` `testing` | P0-T06 | Test dashboard bằng histogram OTLP giả lập; rate cần ≥ 2 mẫu | [P0-T06](phase-0/P0-T06.md#test-dashboard-bằng-metric-otlp-giả-lập) |
+| `go/interface` | P0-T07 | Interface ở phía dùng (`httpx.Pinger`); fake bằng func type | [P0-T07](phase-0/P0-T07.md#interface-khai-báo-ở-phía-dùng-httpxpinger) |
+| `go/structure` | P0-T07 | Wiring tay, `run()` trả error để defer chạy; `pkg/` vs `internal/` | [P0-T07](phase-0/P0-T07.md#wiring-tay-trong-maingo-run-trả-error) |
+| `go/context` | P0-T07 | healthz vs readyz; timeout bằng context; pgxpool mở kết nối lười | [P0-T07](phase-0/P0-T07.md#healthz-vs-readyz-timeout-bằng-context) |
 
 ## Mẫu một file
 

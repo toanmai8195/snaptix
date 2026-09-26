@@ -37,7 +37,9 @@ Sao chép `.env.example` thành `.env` ở mỗi app/service.
 
 | Biến | Dùng bởi | Ví dụ |
 |---|---|---|
-| `CORE_DATABASE_URL` | core | `postgres://snaptix:snaptix@localhost:5432/core` |
+| `CORE_HTTP_ADDR` | core | `:8080` (mặc định) |
+| `CORE_DATABASE_URL` | core | `postgres://snaptix:snaptix@localhost:5432/core?sslmode=disable` (mặc định) |
+| `LOG_LEVEL` | core | `debug` \| `info` (mặc định) \| `warn` \| `error` |
 | `ANALYTICS_DATABASE_URL` | stats-worker, bff | `postgres://snaptix:snaptix@localhost:5433/analytics` |
 | `REDIS_URL` | core, bff | `redis://localhost:6379` |
 | `MONGODB_URI` | bff | `mongodb://localhost:27017/snaptix` |
