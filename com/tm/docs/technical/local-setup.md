@@ -47,7 +47,8 @@ Sao chép `.env.example` thành `.env` ở mỗi app/service.
 | `OTEL_METRIC_EXPORT_INTERVAL` | core, bff | `10000` (ms, mặc định) |
 | `ANALYTICS_DATABASE_URL` | stats-worker, bff | `postgres://snaptix:snaptix@localhost:5433/analytics` |
 | `REDIS_URL` | core, bff | `redis://localhost:6379` |
-| `MONGODB_URI` | bff | `mongodb://localhost:27017/snaptix` |
+| `BFF_HOST` / `BFF_PORT` | bff | `0.0.0.0` / `3000` (mặc định) |
+| `MONGODB_URI` | bff | `mongodb://localhost:27017/snaptix` (mặc định) |
 | `CORE_BASE_URL` | bff | `http://localhost:8080` |
 | `CORE_SERVICE_TOKEN` | bff, core | chuỗi ngẫu nhiên |
 | `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | bff | từ Google Cloud Console |

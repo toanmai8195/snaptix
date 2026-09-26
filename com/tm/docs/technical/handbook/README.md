@@ -39,6 +39,7 @@ handbook/
 | P0-T09 | Graceful shutdown cho core | [phase-0/P0-T09.md](phase-0/P0-T09.md) |
 | P0-T10 | OpenTelemetry SDK, export OTLP | [phase-0/P0-T10.md](phase-0/P0-T10.md) |
 | P0-T10a | Image OCI cho core (server + worker) | [phase-0/P0-T10a.md](phase-0/P0-T10a.md) |
+| P0-T11 | Skeleton BFF (Fastify + TypeScript) | [phase-0/P0-T11.md](phase-0/P0-T11.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -78,6 +79,9 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `otel` `pg` | P0-T10 | Decorator QueryTracer: trace PG chỉ khi có span cha | [P0-T10](phase-0/P0-T10.md#trace-pg-chỉ-khi-có-span-cha) |
 | `oci` `security` | P0-T10a | Container non-root 65532 trên distroless | [P0-T10a](phase-0/P0-T10a.md#chạy-container-bằng-user-non-root) |
 | `docker` `go/signal` | P0-T10a | Entrypoint dạng exec → binary là PID 1 nhận SIGTERM | [P0-T10a](phase-0/P0-T10a.md#dừng-êm-trong-container) |
+| `node/fastify` `testing` | P0-T11 | buildApp(deps) + app.inject; logger pino JSON; genReqId | [P0-T11](phase-0/P0-T11.md#buildappdeps-tách-khỏi-serverts--test-bằng-appinject) |
+| `node/async` | P0-T11 | AbortSignal.timeout ≈ context.WithTimeout; MongoClient kết nối lười | [P0-T11](phase-0/P0-T11.md#timeout-bằng-abortsignaltimeout) |
+| `node/pnpm` `security` | P0-T11 | pnpm 11 allowBuilds, minimumReleaseAge; chọn TS 6 vì typescript-eslint | [P0-T11](phase-0/P0-T11.md#pnpm-11-duyệt-build-script-độ-tuổi-tối-thiểu-của-bản-phát-hành) |
 
 ## Mẫu một file
 

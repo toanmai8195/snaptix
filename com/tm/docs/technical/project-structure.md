@@ -165,7 +165,7 @@ com/tm/app/
 |---|---|
 | Dependency | pnpm workspace (`apps/*`, `packages/*`), một lockfile; `packageManager: pnpm@11.18.0`, Node ≥ 22 |
 | Dev BFF | `tsx watch` |
-| Build BFF | `tsc --noEmit` (kiểm type) + `tsup` (esbuild) → `dist/` |
+| Build BFF | `tsc --noEmit` (kiểm type, TypeScript 6 strict) + `tsup` (esbuild) → `dist/server.js` ESM |
 | Build web | Vite |
 | Test | Vitest, Testing Library, Playwright |
 | Image BFF | Dockerfile multi-stage + `pnpm deploy --filter bff --prod` |

@@ -125,7 +125,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 6. Commit: `build(core): OCI images for core server and worker [P0-T10a][G14]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 
 ### bff
-- [ ] **P0-T11** Skeleton `com/tm/app/apps/bff` Fastify + TS (ESM, strict, `tsx` khi dev, `tsup` khi build): plugin config, logger pino JSON, `/healthz`, `/readyz`
+- [x] **P0-T11** Skeleton `com/tm/app/apps/bff` Fastify + TS (ESM, strict, `tsx` khi dev, `tsup` khi build): plugin config, logger pino JSON, `/healthz`, `/readyz`
+  - [x] 1. Test case: P0-T11-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `feat(bff): Fastify + TypeScript skeleton with config, pino JSON, health [P0-T11]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 - [ ] **P0-T12** OTel cho Node, gọi thử `core /healthz` để kiểm tra trace xuyên service `[G10]`
 - [ ] **P0-T13** Graceful shutdown Fastify (`close` hooks)
 
