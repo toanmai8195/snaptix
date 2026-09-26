@@ -5,8 +5,11 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -26,6 +29,10 @@ func main() {
 }
 
 func run(ctx context.Context) error {
+	// SIGTERM (orchestrator) / SIGINT (Ctrl+C) huỷ ctx → Serve bắt đầu dừng êm.
+	ctx, stop := signal.NotifyContext(ctx, syscall.SIGTERM, os.Interrupt)
+	defer stop()
+
 	cfg, err := config.Load(os.Getenv)
 	if err != nil {
 		return fmt.Errorf("config: %w", err)
@@ -38,13 +45,20 @@ func run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer pool.Close()
+	// Đóng pool SAU khi server dừng hẳn: request đang chạy vẫn dùng được DB.
+	defer func() {
+		pool.Close()
+		log.Info("database pool closed")
+	}()
 
+	ln, err := net.Listen("tcp", cfg.HTTPAddr)
+	if err != nil {
+		return fmt.Errorf("listen %s: %w", cfg.HTTPAddr, err)
+	}
 	srv := &http.Server{
-		Addr:              cfg.HTTPAddr,
 		Handler:           httpx.NewRouter(httpx.Deps{Log: log, DB: pool}),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 	log.InfoContext(ctx, "core started", slog.String("addr", cfg.HTTPAddr))
-	return srv.ListenAndServe()
+	return httpx.Serve(ctx, srv, ln, log, cfg.ShutdownTimeout)
 }

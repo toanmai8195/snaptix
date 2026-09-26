@@ -36,6 +36,7 @@ handbook/
 | P0-T06 | Dashboard Grafana RED metrics | [phase-0/P0-T06.md](phase-0/P0-T06.md) |
 | P0-T07 | Skeleton core service | [phase-0/P0-T07.md](phase-0/P0-T07.md) |
 | P0-T08 | Middleware request ID, recover, access log, OTel HTTP | [phase-0/P0-T08.md](phase-0/P0-T08.md) |
+| P0-T09 | Graceful shutdown cho core | [phase-0/P0-T09.md](phase-0/P0-T09.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -69,6 +70,8 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `go/http` | P0-T08 | Thứ tự middleware; route pattern chỉ có sau routing; recover + ErrAbortHandler | [P0-T08](phase-0/P0-T08.md#route-pattern-chỉ-có-sau-khi-chi-định-tuyến) |
 | `go/slog` `otel` | P0-T08 | Handler gắn trace_id/request_id từ context; bọc cả WithAttrs/WithGroup | [P0-T08](phase-0/P0-T08.md#log-handler-gắn-trace_id--request_id-từ-context) |
 | `go/http` `go/testing` | P0-T08 | Khoá header được chuẩn hoá — dùng Header.Add; test OTel bằng SDK in-memory | [P0-T08](phase-0/P0-T08.md#header-go-được-chuẩn-hoá-khoá) |
+| `go/context` `go/http` | P0-T09 | signal.NotifyContext; Shutdown với context.WithoutCancel; ErrServerClosed | [P0-T09](phase-0/P0-T09.md#httpservershutdown-và-contextwithoutcancel) |
+| `go/testing` | P0-T09 | Truyền net.Listener (:0) để test shutdown bằng TCP thật | [P0-T09](phase-0/P0-T09.md#truyền-netlistener-để-test-shutdown-thật) |
 
 ## Mẫu một file
 

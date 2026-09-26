@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/toanmai8195/snaptix/com/tm/server/pkg/otelx"
 )
@@ -14,11 +15,14 @@ type Config struct {
 	HTTPAddr    string
 	DatabaseURL string
 	LogLevel    slog.Level
+	// ShutdownTimeout: thời gian tối đa chờ request đang chạy khi dừng service.
+	ShutdownTimeout time.Duration
 }
 
 const (
 	defaultHTTPAddr    = ":8080"
 	defaultDatabaseURL = "postgres://snaptix:snaptix@localhost:5432/core?sslmode=disable"
+	defaultShutdown    = 15 * time.Second
 )
 
 // Load đọc cấu hình qua getenv (truyền os.Getenv; test truyền map) và áp giá trị mặc định.
@@ -33,6 +37,16 @@ func Load(getenv func(string) string) (Config, error) {
 		errs = append(errs, fmt.Errorf("LOG_LEVEL: %w", err))
 	}
 	cfg.LogLevel = level
+
+	cfg.ShutdownTimeout = defaultShutdown
+	if v := getenv("CORE_SHUTDOWN_TIMEOUT"); v != "" {
+		d, err := time.ParseDuration(v)
+		if err != nil || d <= 0 {
+			errs = append(errs, fmt.Errorf("CORE_SHUTDOWN_TIMEOUT: %q không phải thời lượng dương (vd 15s)", v))
+		} else {
+			cfg.ShutdownTimeout = d
+		}
+	}
 	return cfg, errors.Join(errs...)
 }
 

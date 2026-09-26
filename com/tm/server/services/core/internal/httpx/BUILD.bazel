@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "middleware.go",
         "router.go",
+        "serve.go",
     ],
     importpath = "github.com/toanmai8195/snaptix/com/tm/server/services/core/internal/httpx",
     visibility = ["//services/core:__subpackages__"],
@@ -24,6 +25,7 @@ go_test(
     srcs = [
         "middleware_test.go",
         "router_test.go",
+        "serve_test.go",
     ],
     embed = [":httpx"],
     deps = [

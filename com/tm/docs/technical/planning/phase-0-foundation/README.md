@@ -102,7 +102,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `feat(core): request ID, recover, access log and OTel HTTP middleware [P0-T08]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [ ] **P0-T09** Graceful shutdown: bắt SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
+- [x] **P0-T09** Graceful shutdown: bắt SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
+  - [x] 1. Test case: P0-T09-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `feat(core): graceful shutdown on SIGTERM/SIGINT [P0-T09][G3]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 - [ ] **P0-T10** Tích hợp OpenTelemetry SDK trong `pkg/otelx`, export OTLP `[G10]`
 - [ ] **P0-T10a** Image OCI cho core: dùng macro `com_tm_go_image` (có từ P0-T01a) cho `cmd/server`, `cmd/worker` `[G14]`
 
@@ -123,7 +129,7 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 
 | # | Công nghệ | Challenge | Bối cảnh | Hướng giải | Hoàn thành khi | Trạng thái |
 |---|---|---|---|---|---|---|
-| G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | ⬜ |
+| G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | 🟨 |
 | G10 | Golang | Observability | Debug trên nhiều service | OpenTelemetry trace, slog JSON, Prometheus metrics | Một trace hiển thị đủ BFF → core → PG | ⬜ |
 | G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng | 🟨 |
 
