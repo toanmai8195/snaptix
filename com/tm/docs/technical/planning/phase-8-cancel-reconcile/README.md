@@ -52,7 +52,7 @@ Hoàn thiện vòng đời vé (huỷ, hoàn tiền theo chính sách, huỷ chu
 ### qa
 - [ ] **P8-T11** Bộ Playwright E2E: đăng nhập → nạp tiền → đặt vé → huỷ vé; admin setup → bán → huỷ chuyến `[R8]`
 - [ ] **P8-T12** Test Testing Library cho component quan trọng (sơ đồ ghế, checkout, ví) `[R8]`
-- [ ] **P8-T13** Chạy lại toàn bộ test case các phase trước (regression)
+- [ ] **P8-T13** Chạy lại toàn bộ test nghiệm thu các phase trước (regression)
 
 ## Challenge
 
@@ -71,7 +71,7 @@ Ngoài ra phase này củng cố lại **P5** (ledger) và **P6** (idempotency) 
 - [ ] Migration expand–contract chạy dưới tải, không có request lỗi do lock
 - [ ] Đạt P8-NFR2, P8-NFR3
 - [ ] Regression toàn bộ phase trước pass
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

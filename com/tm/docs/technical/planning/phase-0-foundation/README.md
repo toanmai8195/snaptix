@@ -30,7 +30,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 ## Task
 
 ### infra
-- [ ] **P0-T01** Khởi tạo cấu trúc `com/tm/{server,app,docs}`, `deploy/`, `loadtest/` theo [project-structure](../../project-structure.md)
+- [x] **P0-T01** Khởi tạo cấu trúc `com/tm/{server,app,docs}`, `deploy/`, `loadtest/` theo [project-structure](../../project-structure.md)
+  - [x] 1. Test case: P0-T01-TC01, P0-T01-TC02, P0-T01-TC03 — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `feat(infra): scaffold monorepo directories and repo checks [P0-T01]` · Push: không
 - [ ] **P0-T01a** `com/tm/server`: `MODULE.bazel` (rules_go, gazelle, rules_oci), `.bazelversion`, một `go.mod`, target `//:gazelle` với `gazelle:prefix` và `go_naming_convention import` `[G14]`
 - [ ] **P0-T01b** `com/tm/app`: `pnpm-workspace.yaml`, `package.json` gốc, script `dev`/`build`/`test` chạy theo filter
 - [ ] **P0-T02** `deploy/docker-compose.yml`: PG core (5432), PG analytics (5433), MongoDB, Redis, otel-collector, Prometheus, Grafana, Tempo/Jaeger
@@ -74,7 +80,7 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 - [ ] `go test ./...` và `bazel test //...` trong `com/tm/server` đều pass
 - [ ] Gọi `bff /healthz?deep=1` → thấy **một trace** gồm span của bff và core trên Grafana
 - [ ] Gửi SIGTERM khi đang có request chậm → request hoàn thành, service thoát sạch
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

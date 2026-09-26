@@ -28,7 +28,7 @@ snaptix dùng **phase làm trục chính** (làm một mình nên cần mốc tu
 
 | Phase | Tên | Mốc demo | Trạng thái |
 |---|---|---|---|
-| [0](phase-0-foundation/) | Nền móng | `docker compose up` chạy đủ hạ tầng, CI xanh, trace hiển thị trên Grafana | ⬜ |
+| [0](phase-0-foundation/) | Nền móng | `docker compose up` chạy đủ hạ tầng, CI xanh, trace hiển thị trên Grafana | 🟨 |
 | [1](phase-1-catalog-search/) | Catalog & tìm chuyến | Gọi API core tìm được chuyến từ dữ liệu seed | ⬜ |
 | [2](phase-2-auth-bff-web/) | Đăng nhập, BFF, web client | Đăng nhập Google, tìm chuyến trên web | ⬜ |
 | [3](phase-3-wallet/) | Ví | Nạp tiền, xem số dư và lịch sử giao dịch | ⬜ |
@@ -62,18 +62,22 @@ flowchart LR
 ```
 phase-N-<tên>/
 ├── README.md            # mục tiêu, phạm vi, requirement, task, challenge, DoD, checklist đóng phase
-├── test-cases.md        # test case cụ thể, map với requirement và challenge
+├── acceptance-tests.md  # test nghiệm thu phase (P<N>-ATnn), dùng cho DoD
+├── tasks/
+│   └── <Task ID>/
+│       └── test-cases.md  # bộ test case riêng của task (<Task ID>-TCnn), tạo ở bước 1
 └── lessons-learned.md   # viết SAU khi đóng phase
 ```
 
 | Mục | Ý nghĩa |
 |---|---|
-| **Requirement** | Hệ thống phải làm được gì — chức năng (FR) và phi chức năng (NFR). Có ID để test case tham chiếu. |
+| **Requirement** | Hệ thống phải làm được gì — chức năng (FR) và phi chức năng (NFR). Có ID để test nghiệm thu tham chiếu. |
 | **Task** | Việc cụ thể cần làm, dạng checklist, gắn tag workstream và ID challenge liên quan. |
 | **Challenge** | Thử thách kỹ thuật cần giải quyết trong phase, kèm tiêu chí "hoàn thành khi". |
 | **DoD** (Definition of Done) | Điều kiện để coi **phase** là xong. Khác với task: DoD là tiêu chí nghiệm thu, task là việc làm. |
 | **Checklist đóng phase** | Việc hành chính bắt buộc trước khi chuyển phase: docs, ADR, lessons learned. |
-| **Test case** | Kịch bản kiểm thử cụ thể; mỗi requirement và challenge có ít nhất một test case. Cột trạng thái ⬜/✅. |
+| **Test case theo task** | Bộ test case riêng của từng task trong `tasks/<Task ID>/test-cases.md`, ID `<Task ID>-TCnn` (vd `P0-T01-TC01`), viết ở bước 1 và phải được duyệt trước khi code. |
+| **Test nghiệm thu** | Test cấp phase trong `acceptance-tests.md`, ID `P<N>-ATnn`, kiểm chứng requirement và challenge; dùng cho DoD. |
 | **Lessons learned** | Bài học cấp phase do người dùng viết: kiến thức mới, sai lầm, số liệu, điều sẽ làm khác. Ghi chú kỹ thuật cấp task nằm ở [handbook](../handbook/README.md). |
 
 ## Quy trình làm một phase

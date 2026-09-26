@@ -72,7 +72,7 @@ Relay outbox tin cậy, stats-worker ghi vào PostgreSQL analytics theo star sch
 - [ ] Replay outbox không làm lệch số liệu
 - [ ] Doanh thu analytics khớp ledger core
 - [ ] Đạt P6-NFR2 trên dữ liệu seed
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

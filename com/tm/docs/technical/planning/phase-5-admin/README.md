@@ -69,7 +69,7 @@ Web admin cho nhà vận hành: setup catalog, lịch chạy/slot, giá vé; qu�
 - [ ] Ma trận quyền pass 100%
 - [ ] Không có API nào sửa/xoá audit log; user DB không có quyền update/delete
 - [ ] Đạt P5-NFR1, P5-NFR2
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

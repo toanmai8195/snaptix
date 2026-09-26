@@ -68,7 +68,7 @@ Xây domain catalog (trạm, tuyến, phương tiện, sơ đồ ghế), chuyế
 - [ ] Logic tính toán (giờ đến, chọn giá) là hàm thuần, test không cần DB
 - [ ] Không có package kiểu `service/`, `repository/`, `utils/`; review lại theo bảng "Go cho người từ Java" trong [project-structure](../../project-structure.md#go-cho-người-từ-java)
 - [ ] Request bị huỷ → query PG bị huỷ theo (kiểm chứng bằng `pg_stat_activity`)
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

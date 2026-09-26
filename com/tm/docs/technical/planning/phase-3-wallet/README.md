@@ -74,7 +74,7 @@ Xây ví nội bộ theo mô hình double-entry ledger, nạp tiền qua cổng 
 - [ ] 100 request cùng `Idempotency-Key` song song → 1 giao dịch
 - [ ] Script bất biến: tổng entries = 0, `balance` = tổng entries cho mọi tài khoản
 - [ ] Có test tái hiện lost update và test chứng minh đã chặn
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

@@ -62,7 +62,7 @@ Kiểm chứng [ADR-0001](../../adr/0001-modular-monolith-core.md) bằng số l
 - [ ] Đặt vé, huỷ vé chạy qua wallet service
 - [ ] Chaos test pass: 0 vé trùng, đối soát chênh lệch 0
 - [ ] Báo cáo so sánh với phase 7 và cập nhật kết luận vào ADR-0001 (hoặc ADR mới thay thế)
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

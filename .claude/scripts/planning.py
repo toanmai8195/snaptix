@@ -7,6 +7,7 @@ Dùng bởi các skill task-detail, phase-detail, sumup.
     planning.py phase [N]          # chi tiết một phase (mặc định: phase hiện tại)
     planning.py sumup              # tổng kết toàn dự án
     planning.py validate [TASK_ID] # kiểm tra bước 0, exit 1 nếu chưa đạt
+    planning.py step [TASK_ID]     # task cần làm + bước tiếp theo (cho skill execute-task)
     planning.py guard              # PreToolUse hook: đọc JSON từ stdin, chặn sửa code sai quy trình
 """
 import re
@@ -22,7 +23,7 @@ TASK_RE = re.compile(r"^- \[( |x)\] \*\*(P\d+-T\d+[a-z]?)\*\* (.*)$")
 STEP_RE = re.compile(r"^\s+- \[( |x)\] (\d)\. (.*)$")
 CHK_RE = re.compile(r"^- \[( |x)\] (.*)$")
 CH_TAG_RE = re.compile(r"\[([GPANMRDS]\d+)(?: [^\]]*)?\]")
-TC_ID_RE = re.compile(r"P\d+-TC\d+")
+TC_ID_RE = re.compile(r"P\d+-T\d+[a-z]?-TC\d+")
 DONE = {"✅"}
 
 
@@ -90,11 +91,15 @@ def load_phase(d: Path, status):
 
     reqs = [{"id": r[0], "type": r[1], "desc": r[2]} for r in table_rows(sec.get("Requirement", []), r"P\d+-N?FR\d+")]
 
-    tcs = []
-    tc_file = d / "test-cases.md"
-    if tc_file.exists():
-        for r in table_rows(tc_file.read_text().splitlines(), r"P\d+-TC\d+"):
-            tcs.append({"id": r[0], "type": r[1], "scenario": r[2], "expect": r[3], "refs": r[4], "status": r[-1]})
+    ats, task_tcs = [], []
+    at_file = d / "acceptance-tests.md"
+    if at_file.exists():
+        for r in table_rows(at_file.read_text().splitlines(), r"P\d+-AT\d+"):
+            ats.append({"id": r[0], "type": r[1], "scenario": r[2], "expect": r[3], "refs": r[4], "status": r[-1]})
+    for tc_file in sorted(d.glob("tasks/*/test-cases.md")):
+        for r in table_rows(tc_file.read_text().splitlines(), r"P\d+-T\d+[a-z]?-TC\d+"):
+            task_tcs.append({"id": r[0], "task": r[0].rsplit("-TC", 1)[0], "type": r[1], "scenario": r[2],
+                             "expect": r[3], "status": r[-1]})
 
     ll = (d / "lessons-learned.md").read_text() if (d / "lessons-learned.md").exists() else ""
     ll_written = bool(re.search(r"^\| Bắt đầu \| *[^| ]", ll, re.M))
@@ -102,7 +107,7 @@ def load_phase(d: Path, status):
     return {"n": n, "dir": d.name, "title": title, "goal": goal, "status": status.get(n, {}).get("status", "?"),
             "milestone": status.get(n, {}).get("milestone", ""), "tasks": tasks, "challenges": challenges,
             "reqs": reqs, "dod": checklist("Definition of Done"), "closing": checklist("Checklist đóng phase"),
-            "tcs": tcs, "lessons_written": ll_written}
+            "ats": ats, "task_tcs": task_tcs, "lessons_written": ll_written}
 
 
 def load_all():
@@ -158,17 +163,19 @@ def print_task(t, label, phases, detail=True):
     if detail:
         phase = next(p for p in phases if p["n"] == t["phase"])
         step1 = next((s for s in t["steps"] if s["n"] == 1), None)
-        ids = set(TC_ID_RE.findall(step1["text"])) if step1 else set()
-        linked = [tc for tc in phase["tcs"] if tc["id"] in ids]
-        related = [tc for tc in phase["tcs"] if tc["id"] not in ids and any(c in re.split(r"[ ,]+", tc["refs"]) for c in t["challenges"])]
-        if linked:
-            print("- Test case đã duyệt:")
-            for tc in linked:
+        own = [tc for tc in phase["task_tcs"] if tc["task"] == t["id"]]
+        approved = bool(step1 and step1["done"])
+        related = [at for at in phase["ats"] if any(c in re.split(r"[ ,]+", at["refs"]) for c in t["challenges"])]
+        if own:
+            print(f"- Test case của task ({'đã duyệt' if approved else 'CHƯA duyệt'}):")
+            for tc in own:
                 print(f"  - {tc['id']} {tc['status']} [{tc['type']}] {tc['scenario']} → {tc['expect']}")
+        else:
+            print("- Test case của task: chưa viết (bước 1)")
         if related:
-            print("- Test case liên quan (theo challenge):")
-            for tc in related:
-                print(f"  - {tc['id']} {tc['status']} [{tc['type']}] {tc['scenario']}")
+            print("- Test nghiệm thu phase liên quan (theo challenge):")
+            for at in related:
+                print(f"  - {at['id']} {at['status']} [{at['type']}] {at['scenario']}")
     c = commits_for(t["id"])
     if c:
         print("- Commit:")
@@ -259,7 +266,8 @@ def cmd_phase(arg):
 
     done = [t for t in p["tasks"] if t["done"]]
     print(f"\n### Tiến độ\n- Task: {pct(len(done), len(p['tasks']))}, đã commit {sum(committed(t) for t in p['tasks'])}")
-    print(f"- Test case: {pct(sum(tc['status'] in DONE for tc in p['tcs']), len(p['tcs']))}")
+    print(f"- Test case theo task: {pct(sum(tc['status'] in DONE for tc in p['task_tcs']), len(p['task_tcs']))}")
+    print(f"- Test nghiệm thu: {pct(sum(at['status'] in DONE for at in p['ats']), len(p['ats']))}")
     print(f"- Challenge: {pct(sum(c['status'] in DONE for c in p['challenges'].values()), len(p['challenges']))}")
     print(f"- DoD: {pct(sum(d['done'] for d in p['dod']), len(p['dod']))} · Checklist đóng phase: {pct(sum(d['done'] for d in p['closing']), len(p['closing']))}")
     print(f"- Lessons learned: {'đã viết' if p['lessons_written'] else 'chưa viết'}")
@@ -302,16 +310,17 @@ def cmd_sumup():
     idx = current_index(tasks)
 
     print("## Tổng quan")
-    print("\n| Phase | Trạng thái | Task | Test case | Challenge | DoD |")
+    print("\n| Phase | Trạng thái | Task | Test nghiệm thu | Challenge | DoD |")
     print("|---|---|---|---|---|---|")
     for p in phases:
         print(f"| {p['title']} | {p['status']} | {pct(sum(t['done'] for t in p['tasks']), len(p['tasks']))} "
-              f"| {pct(sum(tc['status'] in DONE for tc in p['tcs']), len(p['tcs']))} "
+              f"| {pct(sum(at['status'] in DONE for at in p['ats']), len(p['ats']))} "
               f"| {pct(sum(c['status'] in DONE for c in p['challenges'].values()), len(p['challenges']))} "
               f"| {pct(sum(d['done'] for d in p['dod']), len(p['dod']))} |")
-    all_tc = [tc for p in phases for tc in p["tcs"]]
+    all_tc = [at for p in phases for at in p["ats"]]
+    all_ttc = [tc for p in phases for tc in p["task_tcs"]]
     all_ch = [c for p in phases for c in p["challenges"].values()]
-    print(f"\n- Toàn dự án: task {pct(sum(t['done'] for t in tasks), len(tasks))} · test case {pct(sum(tc['status'] in DONE for tc in all_tc), len(all_tc))} · challenge {pct(sum(c['status'] in DONE for c in all_ch), len(all_ch))}")
+    print(f"\n- Toàn dự án: task {pct(sum(t['done'] for t in tasks), len(tasks))} · test nghiệm thu {pct(sum(tc['status'] in DONE for tc in all_tc), len(all_tc))} · test case theo task {pct(sum(tc['status'] in DONE for tc in all_ttc), len(all_ttc))} · challenge {pct(sum(c['status'] in DONE for c in all_ch), len(all_ch))}")
     if idx < len(tasks):
         t = tasks[idx]
         print(f"- Đang ở: {t['id']} (Phase {t['phase']}) — {t['desc']}")
@@ -366,6 +375,58 @@ def cmd_sumup():
             print(f"- {line}")
 
 
+STEP_NAMES = {
+    0: "Validate + tạo checklist con",
+    1: "Gen test case → chờ người dùng duyệt",
+    2: "Code",
+    3: "Agent tự viết unit test",
+    4: "Build + chạy lại unit test",
+    5: "Test theo test case + ghi handbook",
+    6: "Hỏi commit / push",
+}
+
+
+def cmd_step(arg):
+    """Task cần làm và bước tiếp theo — dùng cho skill execute-task."""
+    phases, tasks = load_all()
+    idx = next((i for i, t in enumerate(tasks) if t["id"].lower() == arg.lower()), None) if arg else current_index(tasks)
+    if idx is None:
+        print(f"Không tìm thấy task {arg}.")
+        return
+    if idx >= len(tasks):
+        print("Tất cả task đã xong và đã commit. Không còn task để thực hiện.")
+        return
+    t = tasks[idx]
+    phase = next(p for p in phases if p["n"] == t["phase"])
+    pdir = PLANNING / phase["dir"]
+    tc_file = pdir / "tasks" / t["id"] / "test-cases.md"
+    if not t["steps"]:
+        step = 0
+    else:
+        step = next((s["n"] for s in sorted(t["steps"], key=lambda s: s["n"]) if not s["done"]), 6)
+    print(f"TASK: {t['id']}")
+    print(f"MÔ TẢ: {t['desc']}")
+    print(f"PHASE: {phase['title']} ({phase['status']})")
+    print(f"README PHASE: {(pdir / 'README.md').relative_to(ROOT)}")
+    print(f"TEST CASE TASK: {tc_file.relative_to(ROOT)} ({'đã có' if tc_file.exists() else 'chưa có'})")
+    print(f"ACCEPTANCE TESTS: {(pdir / 'acceptance-tests.md').relative_to(ROOT)}")
+    hb = HANDBOOK / f"phase-{phase['n']}" / f"{t['id']}.md"
+    print(f"HANDBOOK TASK: {hb.relative_to(ROOT)} ({'đã có' if hb.exists() else 'chưa có'})")
+    if t["challenges"]:
+        print("CHALLENGE: " + " | ".join(ch_line(c, phases) for c in t["challenges"]))
+    print(f"BƯỚC TIẾP THEO: {step} — {STEP_NAMES[step]}")
+    if step == 1 and tc_file.exists():
+        print("GHI CHÚ: test case đã viết, đang chờ người dùng duyệt.")
+    if step == 0:
+        print("VALIDATE BƯỚC 0:")
+        for ok, text in validate(phases, tasks, idx):
+            print(f"- {'✅' if ok else '❌'} {text}")
+    if t["steps"]:
+        print("CHECKLIST CON:")
+        for st in t["steps"]:
+            print(f"- [{'x' if st['done'] else ' '}] {st['n']}. {st['text']}")
+
+
 GUARDED = ("com/tm/server/", "com/tm/app/")
 
 
@@ -417,4 +478,4 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "sumup"
     arg = " ".join(sys.argv[2:]).strip()
     {"task": lambda: cmd_task(arg), "phase": lambda: cmd_phase(arg), "sumup": cmd_sumup,
-     "validate": lambda: cmd_validate(arg), "guard": cmd_guard}.get(cmd, lambda: print(__doc__))()
+     "validate": lambda: cmd_validate(arg), "guard": cmd_guard, "step": lambda: cmd_step(arg)}.get(cmd, lambda: print(__doc__))()

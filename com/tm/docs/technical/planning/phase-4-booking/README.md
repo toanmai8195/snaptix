@@ -83,7 +83,7 @@ Luồng cốt lõi: giữ ghế có thời hạn, đặt vé thanh toán bằng 
 - [ ] Đạt P4-NFR2 trên máy dev
 - [ ] ADR so sánh chiến lược khoá có số liệu; chọn một chiến lược mặc định
 - [ ] Mỗi booking có đúng một sự kiện `booking.confirmed` trong `outbox_events`
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 

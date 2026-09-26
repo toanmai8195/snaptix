@@ -8,6 +8,7 @@ snaptix/
 ├── .github/workflows/        # CI chạy theo đường dẫn thay đổi
 ├── deploy/                   # docker-compose, observability — dùng cho cả server lẫn app
 ├── loadtest/                 # kịch bản k6, kết quả theo phase
+├── scripts/                  # script kiểm tra repo (cấu trúc, .gitignore) + test của chúng
 └── com/tm/
     ├── server/               # Go — Bazel workspace
     ├── app/                  # Node.js + React — pnpm workspace

@@ -77,7 +77,7 @@ Hoàn thiện BFF (Fastify) với đăng nhập Google, session, gọi core tin 
 - [ ] Tắt core → web hiển thị lỗi thân thiện trong ≤ 2s
 - [ ] Đổi một field trong `core.openapi.yaml` → build BFF fail
 - [ ] Đạt P2-NFR3
-- [ ] Mọi test case trong [test-cases.md](test-cases.md) pass
+- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 
