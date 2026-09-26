@@ -38,6 +38,7 @@ handbook/
 | P0-T08 | Middleware request ID, recover, access log, OTel HTTP | [phase-0/P0-T08.md](phase-0/P0-T08.md) |
 | P0-T09 | Graceful shutdown cho core | [phase-0/P0-T09.md](phase-0/P0-T09.md) |
 | P0-T10 | OpenTelemetry SDK, export OTLP | [phase-0/P0-T10.md](phase-0/P0-T10.md) |
+| P0-T10a | Image OCI cho core (server + worker) | [phase-0/P0-T10a.md](phase-0/P0-T10a.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -75,6 +76,8 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `go/testing` | P0-T09 | Truyền net.Listener (:0) để test shutdown bằng TCP thật | [P0-T09](phase-0/P0-T09.md#truyền-netlistener-để-test-shutdown-thật) |
 | `otel` | P0-T10 | Provider global (proxy), flush khi dừng, ErrorHandler, biến OTEL_* | [P0-T10](phase-0/P0-T10.md#batchspanprocessor--periodicreader--phải-flush-khi-dừng) |
 | `otel` `pg` | P0-T10 | Decorator QueryTracer: trace PG chỉ khi có span cha | [P0-T10](phase-0/P0-T10.md#trace-pg-chỉ-khi-có-span-cha) |
+| `oci` `security` | P0-T10a | Container non-root 65532 trên distroless | [P0-T10a](phase-0/P0-T10a.md#chạy-container-bằng-user-non-root) |
+| `docker` `go/signal` | P0-T10a | Entrypoint dạng exec → binary là PID 1 nhận SIGTERM | [P0-T10a](phase-0/P0-T10a.md#dừng-êm-trong-container) |
 
 ## Mẫu một file
 

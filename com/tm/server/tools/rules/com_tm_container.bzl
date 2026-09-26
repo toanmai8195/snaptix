@@ -7,7 +7,8 @@ Một lệnh gọi com_tm_go_image(name = "x", ...) sinh:
     :x_docker   load image vào Docker local     bazel run --config=linux-arm64 //path:x_docker
     :x_push     push image (chỉ khi có `repository`)
 
-Tag image: com.tm.go.<name>:<image_tag>
+Tag image: com.tm.go.<image_name>:<image_tag> (image_name mặc định = name).
+Container chạy bằng user non-root 65532 (có sẵn trong distroless) trừ khi đổi `user`.
 
 Gazelle map `go_binary` sang macro này (BUILD.bazel gốc), nên chương trình mới
 có sẵn các target trên sau `bazel run //:gazelle`.
@@ -30,6 +31,8 @@ def com_tm_go_image(
         env = None,
         repository = None,
         image_tag = DEFAULT_IMAGE_TAG,
+        image_name = None,
+        user = "65532:65532",
         visibility = ["//visibility:public"],
         **kwargs):
     """go_binary tĩnh (CGO tắt) + OCI image trên distroless.
@@ -44,6 +47,8 @@ def com_tm_go_image(
         env: biến môi trường của container.
         repository: registry cho `<name>_push`; bỏ trống thì không sinh target push.
         image_tag: tag image.
+        image_name: tên image (com.tm.go.<image_name>); mặc định = name.
+        user: user chạy trong container; mặc định non-root 65532:65532.
         visibility: visibility của các target sinh ra.
         **kwargs: thuộc tính khác chuyển thẳng cho go_binary.
     """
@@ -81,13 +86,14 @@ def com_tm_go_image(
         env = env,
         exposed_ports = exposed_ports,
         tars = [":" + name + "_tar"],
+        user = user,
         visibility = visibility,
     )
 
     oci_load(
         name = name + "_docker",
         image = ":" + name + "_image",
-        repo_tags = ["com.tm.go.%s:%s" % (name, image_tag)],
+        repo_tags = ["com.tm.go.%s:%s" % (image_name or name, image_tag)],
         visibility = visibility,
     )
 

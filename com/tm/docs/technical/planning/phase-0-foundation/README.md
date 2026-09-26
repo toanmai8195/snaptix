@@ -116,7 +116,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `feat(otel): OpenTelemetry SDK with OTLP export and pgx tracing [P0-T10][G10]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [ ] **P0-T10a** Image OCI cho core: dùng macro `com_tm_go_image` (có từ P0-T01a) cho `cmd/server`, `cmd/worker` `[G14]`
+- [x] **P0-T10a** Image OCI cho core: dùng macro `com_tm_go_image` (có từ P0-T01a) cho `cmd/server`, `cmd/worker` `[G14]`
+  - [x] 1. Test case: P0-T10a-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build(core): OCI images for core server and worker [P0-T10a][G14]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 
 ### bff
 - [ ] **P0-T11** Skeleton `com/tm/app/apps/bff` Fastify + TS (ESM, strict, `tsx` khi dev, `tsup` khi build): plugin config, logger pino JSON, `/healthz`, `/readyz`

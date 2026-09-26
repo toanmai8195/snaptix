@@ -74,7 +74,7 @@ com/tm/server/
 | Sau khi thêm file | `bazel run //:gazelle` |
 | Code sinh ra (sqlc, oapi-codegen) | Commit vào repo |
 | Test cần Docker | `tags = ["requires-docker", "requires-network"]`, `size = "large"` |
-| Image | Macro `com_tm_go_image` (`tools/rules/com_tm_container.bzl`), gazelle `map_kind` cho mọi `go_binary`. Sinh `<name>`, `<name>_image`, `<name>_docker` (tag `com.tm.go.<name>:v1.0.0`), `<name>_push` khi có `repository`. Base distroless pin digest |
+| Image | Macro `com_tm_go_image` (`tools/rules/com_tm_container.bzl`), gazelle `map_kind` cho mọi `go_binary`. Sinh `<name>`, `<name>_image`, `<name>_docker` (tag `com.tm.go.<image_name>:v1.0.0`, `image_name` mặc định = name), `<name>_push` khi có `repository`. Base distroless pin digest, chạy user non-root 65532. Core: `core-server`, `core-worker` |
 | Build image | `bazel run --config=linux-arm64 //path:<name>_docker` (Apple Silicon) · `--config=linux-amd64` (server x86) |
 | IDE / gopls | Dùng `go.mod` trực tiếp, không cần `GOPACKAGESDRIVER`. Code phải build được bằng cả `go` lẫn Bazel |
 
