@@ -427,6 +427,68 @@ def cmd_step(arg):
             print(f"- [{'x' if st['done'] else ' '}] {st['n']}. {st['text']}")
 
 
+def _task_file(task_id):
+    phases, tasks = load_all()
+    t = next((t for t in tasks if t["id"] == task_id), None)
+    if not t:
+        sys.exit(f"Không tìm thấy task {task_id}")
+    phase = next(p for p in phases if p["n"] == t["phase"])
+    return t, PLANNING / phase["dir"]
+
+
+def cmd_mark(argv):
+    """Thao tác checklist của task (dùng khi làm task, tránh sửa tay):
+
+    mark start <ID> <mô tả test case>      thêm checklist con 6 bước (bước 0)
+    mark step <ID> <n> [ghi chú bước 6]    tick bước n; n=5 tick cả dòng task
+    mark tc <ID>                           đánh ✅ mọi test case của task
+    """
+    if len(argv) < 2:
+        sys.exit(cmd_mark.__doc__)
+    action, tid = argv[0], argv[1]
+    t, pdir = _task_file(tid)
+    readme = pdir / "README.md"
+    text = readme.read_text()
+    line_re = re.compile(rf"^- \[( |x)\] \*\*{re.escape(tid)}\*\* .*$", re.M)
+    m = line_re.search(text)
+    if action == "start":
+        if t["steps"]:
+            sys.exit(f"{tid} đã có checklist con")
+        tc = " ".join(argv[2:]) or f"{tid}-TC01..TCnn"
+        block = "\n".join([
+            f"  - [ ] 1. Test case: {tc} — đã được duyệt",
+            "  - [ ] 2. Code", "  - [ ] 3. Unit test", "  - [ ] 4. Build + unit test pass",
+            "  - [ ] 5. Test case pass + handbook",
+            f"  - [ ] 6. Commit: `<type(scope): mô tả [{tid}]>` · Push: có/không"])
+        text = text[:m.end()] + "\n" + block + text[m.end():]
+    elif action == "step":
+        n = int(argv[2])
+        note = " ".join(argv[3:])
+        seg_end = text.find("\n- [", m.end())
+        seg_end = len(text) if seg_end == -1 else seg_end
+        seg = text[m.end():seg_end]
+        step_re = re.compile(rf"^(\s+- )\[ \]( {n}\. )(.*)$", re.M)
+        if not step_re.search(seg):
+            sys.exit(f"Bước {n} của {tid} không có hoặc đã tick")
+        if n == 6 and note:
+            seg = step_re.sub(lambda mm: f"{mm.group(1)}[x]{mm.group(2)}{note}", seg, count=1)
+        else:
+            seg = step_re.sub(r"\1[x]\2\3", seg, count=1)
+        text = text[:m.end()] + seg + text[seg_end:]
+        if n == 5:
+            text = line_re.sub(lambda mm: mm.group(0).replace("- [ ]", "- [x]", 1), text, count=1)
+    elif action == "tc":
+        f = pdir / "tasks" / tid / "test-cases.md"
+        s2 = re.sub(rf"^(\| {re.escape(tid)}-TC\d+ \|.*)\| ⬜ \|$", r"\1| ✅ |", f.read_text(), flags=re.M)
+        f.write_text(s2)
+        print(f"{tid}: {s2.count('| ✅ |')} test case ✅")
+        return
+    else:
+        sys.exit(cmd_mark.__doc__)
+    readme.write_text(text)
+    print(f"{tid}: {action} {' '.join(argv[2:3])} ok")
+
+
 GUARDED = ("com/tm/server/", "com/tm/app/")
 
 
@@ -478,4 +540,5 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "sumup"
     arg = " ".join(sys.argv[2:]).strip()
     {"task": lambda: cmd_task(arg), "phase": lambda: cmd_phase(arg), "sumup": cmd_sumup,
-     "validate": lambda: cmd_validate(arg), "guard": cmd_guard, "step": lambda: cmd_step(arg)}.get(cmd, lambda: print(__doc__))()
+     "validate": lambda: cmd_validate(arg), "guard": cmd_guard, "step": lambda: cmd_step(arg),
+     "mark": lambda: cmd_mark(sys.argv[2:])}.get(cmd, lambda: print(__doc__))()

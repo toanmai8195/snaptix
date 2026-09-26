@@ -145,7 +145,7 @@ router := httpx.NewRouter(catalog.Routes(catalogSvc), booking.Routes(bookingSvc)
 
 ```
 com/tm/app/
-├── package.json
+├── package.json              # script gốc dev/build/test/lint/typecheck (pnpm --recursive --if-present)
 ├── pnpm-workspace.yaml
 ├── pnpm-lock.yaml
 ├── api/
@@ -163,7 +163,7 @@ com/tm/app/
 
 | Việc | Công cụ |
 |---|---|
-| Dependency | pnpm workspace, một lockfile |
+| Dependency | pnpm workspace (`apps/*`, `packages/*`), một lockfile; `packageManager: pnpm@11.18.0`, Node ≥ 22 |
 | Dev BFF | `tsx watch` |
 | Build BFF | `tsc --noEmit` (kiểm type) + `tsup` (esbuild) → `dist/` |
 | Build web | Vite |
