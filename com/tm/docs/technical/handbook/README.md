@@ -33,6 +33,7 @@ handbook/
 | P0-T03 | goose migration cho PG core và analytics | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
 | P0-T04 | CI GitHub Actions theo đường dẫn thay đổi | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
 | P0-T05 | Makefile cho các thao tác thường dùng | [phase-0/P0-T05.md](phase-0/P0-T05.md) |
+| P0-T06 | Dashboard Grafana RED metrics | [phase-0/P0-T06.md](phase-0/P0-T06.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -58,6 +59,8 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `bazel` `ci` | P0-T04 | Test bị ảnh hưởng bằng `rdeps`; `bazel test` exit 4 khi không có test | [P0-T04](phase-0/P0-T04.md#bazel-chỉ-test-target-bị-ảnh-hưởng-bằng-rdeps) |
 | `bazel` `gazelle` `ci` | P0-T04 | `gazelle -mode=diff` chặn BUILD.bazel lỗi thời | [P0-T04](phase-0/P0-T04.md#gazelle--modediff-giữ-buildbazel-luôn-cập-nhật) |
 | `make` | P0-T05 | `make help` từ comment `##`; `$$` trong recipe; biến `PROJECT ?=` | [P0-T05](phase-0/P0-T05.md#make-help-tự-sinh-từ-comment-) |
+| `observability` `prometheus` | P0-T06 | RED từ metric OTel `http.server.request.duration`; tên sau collector; clamp_min, sum by le | [P0-T06](phase-0/P0-T06.md#red-và-hợp-đồng-metric-opentelemetry) |
+| `otel` `testing` | P0-T06 | Test dashboard bằng histogram OTLP giả lập; rate cần ≥ 2 mẫu | [P0-T06](phase-0/P0-T06.md#test-dashboard-bằng-metric-otlp-giả-lập) |
 
 ## Mẫu một file
 

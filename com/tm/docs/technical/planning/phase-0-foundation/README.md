@@ -79,7 +79,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `build: Makefile for infra, migrations and CI checks [P0-T05]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [ ] **P0-T06** Dashboard Grafana cơ bản: RED metrics cho mỗi service
+- [x] **P0-T06** Dashboard Grafana cơ bản: RED metrics cho mỗi service
+  - [x] 1. Test case: P0-T06-TC01..TC04 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `feat(observability): provisioned Grafana RED dashboard [P0-T06]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 
 ### core
 - [ ] **P0-T07** Skeleton `com/tm/server/services/core`: config (env), slog JSON, chi router, pgxpool, `/healthz`, `/readyz`, `/metrics`

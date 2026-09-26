@@ -89,5 +89,6 @@ flowchart LR
 - **Tracing**: OpenTelemetry, trace ID truyền từ BFF sang core qua header `traceparent`.
 - **Metrics**: Prometheus — RED metrics cho mỗi endpoint, số ghế đang hold, độ trễ outbox, pool connection PG.
 - **Logging**: JSON có cấu trúc, luôn kèm `trace_id`, `user_id`, `request_id`.
-- **Dashboard**: Grafana (datasource Prometheus + Tempo provision sẵn).
+- **Dashboard**: Grafana (datasource Prometheus + Tempo provision sẵn). Dashboard **snaptix — RED** provision từ `deploy/observability/grafana/provisioning/dashboards/json/`.
+- **Hợp đồng metric HTTP**: mọi service phát OTel `http.server.request.duration` (histogram, giây) với `http.response.status_code`, `http.route` → Prometheus `http_server_request_duration_seconds_*{service_name, ...}`.
 - **Luồng local**: app → OTLP (4317/4318) → otel-collector → Tempo (trace) / Prometheus (metric) → Grafana. Cấu hình trong `deploy/observability/`.
