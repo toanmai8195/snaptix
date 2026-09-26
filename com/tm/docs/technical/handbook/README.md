@@ -29,6 +29,7 @@ handbook/
 | P0-T01 | Khởi tạo cấu trúc thư mục monorepo | [phase-0/P0-T01.md](phase-0/P0-T01.md) |
 | P0-T01a | Bazel + Go module + macro build image | [phase-0/P0-T01a.md](phase-0/P0-T01a.md) |
 | P0-T01b | pnpm workspace cho com/tm/app | [phase-0/P0-T01b.md](phase-0/P0-T01b.md) |
+| P0-T02 | docker-compose hạ tầng local | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -45,6 +46,9 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `git` `bazel` | P0-T01a | git check-ignore không đi xuyên symlink bazel-out | [P0-T01a](phase-0/P0-T01a.md#git-check-ignore-và-symlink-của-bazel) |
 | `node/pnpm` | P0-T01b | Script gốc `--recursive --if-present`; pin packageManager/engines | [P0-T01b](phase-0/P0-T01b.md#pnpm-workspace-script-gốc-chạy-đệ-quy) |
 | `node/pnpm` `git` | P0-T01b | `--filter "...[ref]"` chỉ thấy file đã track | [P0-T01b](phase-0/P0-T01b.md#--filter-ref-chỉ-thấy-thay-đổi-đã-track) |
+| `docker/compose` | P0-T02 | Healthcheck + `up --wait`; `$${VAR}` trong healthcheck | [P0-T02](phase-0/P0-T02.md#healthcheck--up---wait-thay-cho-sleep) |
+| `observability` `otel` | P0-T02 | OTLP → collector → Tempo/Prometheus → Grafana; test bằng span tự gửi | [P0-T02](phase-0/P0-T02.md#luồng-observability-otlp--collector--tempo--prometheus--grafana) |
+| `docker/compose` `testing` | P0-T02 | Test compose với project riêng để không phá dữ liệu dev | [P0-T02](phase-0/P0-T02.md#test-compose-không-phá-dữ-liệu-dev) |
 
 ## Mẫu một file
 

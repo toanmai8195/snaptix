@@ -15,7 +15,7 @@
 git clone <repo-url> snaptix && cd snaptix
 
 # 1. Hạ tầng: postgres (core + analytics), mongodb, redis, observability
-docker compose -f deploy/docker-compose.yml up -d
+docker compose -f deploy/docker-compose.yml up -d --wait
 
 # 2. Migration
 goose -dir com/tm/server/db/core/migrations postgres "$CORE_DATABASE_URL" up
@@ -60,7 +60,10 @@ Sao chép `.env.example` thành `.env` ở mỗi app/service.
 | PostgreSQL core / analytics | 5432 / 5433 |
 | MongoDB | 27017 |
 | Redis | 6379 |
-| Grafana | 3100 |
+| OTLP gRPC / HTTP (otel-collector) | 4317 / 4318 |
+| Prometheus | 9090 |
+| Tempo | 3200 |
+| Grafana (đăng nhập ẩn danh, quyền Admin) | 3100 |
 
 ## Build & kiểm thử
 
