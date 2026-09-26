@@ -58,7 +58,13 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `build(deploy): docker-compose for local infra and observability [P0-T02]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [ ] **P0-T03** Cấu hình goose, thư mục `com/tm/server/db/core/migrations`, `com/tm/server/db/analytics/migrations`, migration rỗng đầu tiên
+- [x] **P0-T03** Cấu hình goose, thư mục `com/tm/server/db/core/migrations`, `com/tm/server/db/analytics/migrations`, migration rỗng đầu tiên
+  - [x] 1. Test case: P0-T03-TC01..TC05 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
+  - [x] 2. Code
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build(db): goose migrations for core and analytics [P0-T03]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
 - [ ] **P0-T04** GitHub Actions chạy theo đường dẫn thay đổi: `com/tm/server/**` → `golangci-lint` + `bazel test` target bị ảnh hưởng; `com/tm/app/**` → `pnpm --filter "...[origin/main]" lint test build` `[G14]`
 - [ ] **P0-T05** Makefile / script: `make up`, `make migrate`, `make test`
 - [ ] **P0-T06** Dashboard Grafana cơ bản: RED metrics cho mỗi service

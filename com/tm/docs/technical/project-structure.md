@@ -8,7 +8,7 @@ snaptix/
 ├── .github/workflows/        # CI chạy theo đường dẫn thay đổi
 ├── deploy/                   # docker-compose, observability — dùng cho cả server lẫn app
 ├── loadtest/                 # kịch bản k6, kết quả theo phase
-├── scripts/                  # script kiểm tra repo (cấu trúc, .gitignore) + test của chúng
+├── scripts/                  # migrate.sh (goose pin), check-*.sh (cấu trúc, .gitignore, migration), test/
 └── com/tm/
     ├── server/               # Go — Bazel workspace
     ├── app/                  # Node.js + React — pnpm workspace
@@ -40,7 +40,7 @@ com/tm/server/
 ├── api/
 │   └── core.openapi.yaml     # hợp đồng API nội bộ của core
 ├── db/
-│   ├── core/migrations/      # goose
+│   ├── core/migrations/      # goose, NNNNN_ten.sql (scripts/migrate.sh)
 │   └── analytics/migrations/
 ├── pkg/                      # dùng chung GIỮA các service (giữ nhỏ)
 │   ├── postgres/             # pool, WithTx, retry 40001/40P01

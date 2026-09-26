@@ -7,7 +7,7 @@
 - Docker + Docker Compose
 - Go 1.23+, Bazelisk (đọc phiên bản Bazel từ `.bazelversion`)
 - Node.js 22+ và pnpm
-- Công cụ: `goose`, `sqlc`
+- Không cần cài goose: `scripts/migrate.sh` chạy goose đã pin bằng `go run`
 
 ## Các bước
 
@@ -18,8 +18,9 @@ git clone <repo-url> snaptix && cd snaptix
 docker compose -f deploy/docker-compose.yml up -d --wait
 
 # 2. Migration
-goose -dir com/tm/server/db/core/migrations postgres "$CORE_DATABASE_URL" up
-goose -dir com/tm/server/db/analytics/migrations postgres "$ANALYTICS_DATABASE_URL" up
+scripts/migrate.sh core up
+scripts/migrate.sh analytics up
+# tạo migration mới: scripts/migrate.sh core create <ten> sql   (đánh số tuần tự)
 
 # 3. Server (Go) — chạy trực tiếp bằng go khi dev
 cd com/tm/server

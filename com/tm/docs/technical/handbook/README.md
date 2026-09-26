@@ -30,6 +30,7 @@ handbook/
 | P0-T01a | Bazel + Go module + macro build image | [phase-0/P0-T01a.md](phase-0/P0-T01a.md) |
 | P0-T01b | pnpm workspace cho com/tm/app | [phase-0/P0-T01b.md](phase-0/P0-T01b.md) |
 | P0-T02 | docker-compose hạ tầng local | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
+| P0-T03 | goose migration cho PG core và analytics | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -49,6 +50,8 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `docker/compose` | P0-T02 | Healthcheck + `up --wait`; `$${VAR}` trong healthcheck | [P0-T02](phase-0/P0-T02.md#healthcheck--up---wait-thay-cho-sleep) |
 | `observability` `otel` | P0-T02 | OTLP → collector → Tempo/Prometheus → Grafana; test bằng span tự gửi | [P0-T02](phase-0/P0-T02.md#luồng-observability-otlp--collector--tempo--prometheus--grafana) |
 | `docker/compose` `testing` | P0-T02 | Test compose với project riêng để không phá dữ liệu dev | [P0-T02](phase-0/P0-T02.md#test-compose-không-phá-dữ-liệu-dev) |
+| `go/tooling` | P0-T03 | Pin công cụ bằng `go run pkg@version` + build tag; GOTOOLCHAIN=local chặn tự tải toolchain | [P0-T03](phase-0/P0-T03.md#bẫy-dependency-yêu-cầu-go-mới-hơn--tự-tải-toolchain) |
+| `pg/migration` | P0-T03 | goose: version của DB vs công cụ; migration tuần tự, luôn có Down | [P0-T03](phase-0/P0-T03.md#quy-ước-migration-đánh-số-tuần-tự-luôn-có-down) |
 
 ## Mẫu một file
 
