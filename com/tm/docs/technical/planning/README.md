@@ -39,7 +39,7 @@ Mỗi chặng chỉ tập trung **một nhóm công nghệ** để làm đến �
 
 | Phase | Chặng · Công nghệ | Tên | Mốc demo | Trạng thái |
 |---|---|---|---|---|
-| [0](phase-0-foundation/) | Go + PG | Nền móng (tối giản) | `make up && make migrate`, core `/readyz` 200, CI xanh | 🟨 |
+| [0](phase-0-foundation/) | Go + PG | Nền móng (tối giản) | `make up && make migrate`, core `/readyz` 200, CI xanh | ✅ |
 | [1](phase-1-catalog-search/) | A · Go + PostgreSQL | Catalog & tìm chuyến | `curl` API core tìm được chuyến trên 10 triệu `trip_seats`, p99 < 20ms | ⬜ |
 | [2](phase-2-wallet/) | A · Go + PostgreSQL | Ví (core) | `curl` nạp tiền qua mock provider, số dư và lịch sử đúng; retry không ghi trùng | ⬜ |
 | [3](phase-3-booking/) | A · Go + PostgreSQL | Giữ chỗ & đặt vé (core) | k6 tranh ghế: 0 vé trùng; đặt vé bằng `curl` trừ ví đúng | ⬜ |

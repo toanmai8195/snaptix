@@ -169,5 +169,5 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
 
 - [x] Cập nhật [local-setup](../../local-setup.md) theo thực tế
 - [x] ADR: Bazel cho Go + pnpm cho TS ([ADR-0002](../../adr/0002-bazel-go-pnpm-ts.md)); công cụ migration ([ADR-0003](../../adr/0003-goose-migrations.md))
-- [ ] Viết [lessons-learned.md](lessons-learned.md)
-- [ ] Cập nhật trạng thái phase trong [planning](../README.md)
+- [x] Viết [lessons-learned.md](lessons-learned.md) (bản nháp do agent viết theo yêu cầu người dùng — người dùng đọc lại, sửa)
+- [x] Cập nhật trạng thái phase trong [planning](../README.md)
