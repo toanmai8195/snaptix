@@ -147,7 +147,7 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
     - [x] 2.4 `.github/workflows/ci.yml`: job `changes` (lọc đường dẫn) + job `server`
   - [x] 3. Unit test — script CI kiểm bằng TC01–TC04 (worktree giả lập thay đổi); không có code Go mới ngoài `pgtest`
   - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook (TC05, TC07 kiểm sau push — cập nhật ở commit đóng phase)
+  - [x] 5. Test case pass + handbook (TC05, TC07 kiểm sau push — ✅ ở commit đóng phase)
   - [x] 6. Commit: `ci: GitHub Actions for Go — gazelle diff, golangci-lint, affected bazel tests [P0-T10][G14]` · Push: có
 
 ## Challenge
@@ -163,7 +163,7 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
 - [x] Core chạy được bằng `go run` và bằng image Docker; `/readyz` phản ánh đúng trạng thái PG
 - [x] Gửi SIGTERM khi đang có request chậm → request hoàn thành, service thoát sạch
 - [x] CI xanh trên `main`
-- [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
+- [x] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass (AT07–AT09 bằng unit test `serve` + manual, AT11 manual — xem ghi chú trong acceptance-tests)
 
 ## Checklist đóng phase
 

@@ -16,7 +16,7 @@ Máy local không có `gh` → trạng thái CI đọc qua GitHub API công khai
 | P0-T10-TC04 | Manual | `bazel-affected-tests.sh <BASE>` với các thay đổi giả lập: (a) chỉ sửa `internal/httpx/health.go`; (b) chỉ sửa `db/core/migrations/*.sql`; (c) sửa `go.mod` / `MODULE.bazel`; (d) chỉ sửa docs | (a) `httpx_test` + `integration_test` (phụ thuộc httpx), **không** có `migrations_test`, `server_test` cũng có (server import httpx); (b) `migrations_test` + `integration_test`; (c) mọi test (`//...`); (d) rỗng | ✅ |
 | P0-T10-TC05 | CI | Push lên `main` (commit của task này) | Workflow `CI` chạy job `changes` + `server`, xanh | ✅ |
 | P0-T10-TC06 | CI | Push nhánh thử có lỗi lint Go | Job `server` fail ở bước lint — P0-AT04 | ✅ |
-| P0-T10-TC07 | CI | Push nhánh thử chỉ sửa `com/tm/docs/**` | Job `server` bị **skip** (không chạy Go) — P0-AT05 | ⬜ |
+| P0-T10-TC07 | CI | Push nhánh thử chỉ sửa `com/tm/docs/**` | Job `server` bị **skip** (không chạy Go) — P0-AT05 | ✅ |
 | P0-T10-TC08 | CI | Trong job `server` trên Ubuntu | Integration test (testcontainers) chạy thật, không skip — Docker của runner dùng được từ Bazel sandbox Linux | ✅ |
 | P0-T10-TC09 | Manual | `make test` | Gọi `scripts/ci/run.sh server` — đúng như [local-setup](../../../../local-setup.md#build--kiểm-thử) ghi | ✅ |
 
@@ -34,6 +34,6 @@ Test nghiệm thu liên quan: P0-AT04 (TC06), P0-AT05 (TC07); DoD "CI xanh trên
 ## Ghi chú khi chạy
 
 - TC06 (AT04): nhánh thử `ci-lint` — run push fail ở bước lint với annotation `golangci-lint báo lỗi` + `health.go:21 errcheck`. Người dùng có mở PR #2 từ nhánh này nhưng GitHub **không chạy** workflow `pull_request` khi PR đang conflict (PR #1 được squash-merge → lịch sử các nhánh thử lệch với `main`), nên kết quả lấy từ run push.
-- TC07 (AT05): lần đầu **fail** — nhánh `ci-docs` chỉ sửa docs mà job `server` vẫn chạy: với push lên nhánh khác `main`, `dorny/paths-filter` mặc định so với `main`. Sửa: `base: github.event.before` cho push. Kiểm lại bằng commit chỉ sửa docs đẩy lên `main` sau commit của task này.
+- TC07 (AT05): lần đầu **fail** — nhánh `ci-docs` chỉ sửa docs mà job `server` vẫn chạy: với push lên nhánh khác `main`, `dorny/paths-filter` mặc định so với `main`. Sửa: `base: github.event.before` cho push. Kiểm lại: commit chỉ sửa docs `a10fd4c` đẩy lên `main` → job `server` **skipped**.
 - TC08: `run.sh` truyền `--test_env=PGTEST_REQUIRE_DOCKER=1` trên CI → `pgtest.Run` thoát lỗi nếu không có Docker; run `ci-try` xanh ⇒ integration test đã chạy thật (log CI cần đăng nhập mới đọc được).
 - TC05: run CI của commit `ci: ... [P0-T10][G14]` trên `main` xanh.
