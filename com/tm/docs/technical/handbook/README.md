@@ -31,6 +31,7 @@ handbook/
 | P0-T03 | goose migration cho PG core | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
 | P0-T04 | Bazel + Gazelle + một go.mod | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
 | P0-T05 | Skeleton core: HTTP server, chi, config, slog, pgxpool, /readyz | [phase-0/P0-T05.md](phase-0/P0-T05.md) |
+| P0-T06 | Graceful shutdown: SIGTERM, Shutdown có timeout, đóng pool sau cùng | [phase-0/P0-T06.md](phase-0/P0-T06.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -56,6 +57,10 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `go/config` `go/errors` | P0-T05 | `loadConfig(getenv)`; `fmt.Errorf` `%q` `%w` | [P0-T05](phase-0/P0-T05.md#config-từ-env-truyền-getenv-như-tham-số) |
 | `go/slog` `go/middleware` | P0-T05 | slog JSON, logger tường minh; middleware bọc ResponseWriter | [P0-T05](phase-0/P0-T05.md#slog-json-và-middleware-log-request) |
 | `pg/pgx` `go/context` `k8s/probe` | P0-T05 | pgxpool lười; `/readyz` + `WithTimeout`; interface phía dùng; liveness vs readiness | [P0-T05](phase-0/P0-T05.md#pgxpool-lười-readyz-với-context-timeout-interface-phía-dùng) |
+| `go/defer` `go/errors` | P0-T06 | `os.Exit` bỏ qua defer → pattern `run() error` | [P0-T06](phase-0/P0-T06.md#osexit-bỏ-qua-defer--pattern-run-error) |
+| `go/signal` `go/goroutine` `go/channel` | P0-T06 | SIGTERM/SIGINT/SIGKILL; goroutine + channel buffer 1 + select; signal lần 2 | [P0-T06](phase-0/P0-T06.md#signal-goroutine-channel-select) |
+| `go/net-http` `go/context` | P0-T06 | `Shutdown` có timeout, `Close` khi quá hạn; timeout < grace period | [P0-T06](phase-0/P0-T06.md#httpservershutdown-có-timeout-close-khi-quá-hạn) |
+| `go/testing` `go/net` | P0-T06 | `net.Listen` + cổng `:0`; nhận ctx thay cho signal để test được | [P0-T06](phase-0/P0-T06.md#thiết-kế-để-test-được-netlisten-cổng-0-ctx-thay-cho-signal) |
 
 ## Mẫu một file
 

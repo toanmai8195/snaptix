@@ -92,7 +92,17 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `feat(core): skeleton core server with chi, slog, pgxpool and health endpoints [P0-T05]` · Push: có
-- [ ] **P0-T06** Graceful shutdown: SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
+- [x] **P0-T06** Graceful shutdown: SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
+  - [x] 1. Test case: P0-T06-TC01..TC10 + kế hoạch subtask — đã được duyệt
+  - [x] 2. Code
+    - [x] 2.1 Tách `main` → `run() error`
+    - [x] 2.2 Bắt SIGINT/SIGTERM bằng `signal.Notify`, goroutine + `select`
+    - [x] 2.3 `srv.Shutdown` có timeout (`CORE_SHUTDOWN_TIMEOUT`), đóng pool sau cùng
+    - [x] 2.4 Tách `serve(ctx, srv, ln, timeout, logger)` với `net.Listen`
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `feat(core): graceful shutdown on SIGTERM with timeout, close pool last [P0-T06][G3]` · Push: có
 - [ ] **P0-T07** Image OCI cho core bằng macro `com_tm_go_image` (rules_oci, distroless, non-root) `[G14]`
 
 ### qa
@@ -106,7 +116,7 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
 
 | # | Công nghệ | Challenge | Bối cảnh | Hướng giải | Hoàn thành khi | Trạng thái |
 |---|---|---|---|---|---|---|
-| G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | ⬜ |
+| G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | 🟨 |
 | G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng; core build được thành image | 🟨 |
 
 ## Definition of Done

@@ -22,6 +22,9 @@ go_binary(
 
 go_test(
     name = "server_test",
-    srcs = ["config_test.go"],
+    srcs = [
+        "config_test.go",
+        "main_test.go",
+    ],
     embed = [":server_lib"],
 )
