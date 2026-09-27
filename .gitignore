@@ -141,3 +141,21 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# ---------------------------------------------------------------------------
+# snaptix — Go / Bazel
+# ---------------------------------------------------------------------------
+# Symlink output Bazel tạo ở thư mục workspace: bazel-bin, bazel-out, bazel-testlogs, bazel-<tên>
+bazel-*
+# Binary test do `go test -c` tạo ra
+*.test
+# Coverage (`go test -coverprofile=coverage.out`) và profile (pprof)
+*.out
+*.prof
+
+# ---------------------------------------------------------------------------
+# snaptix — editor / hệ điều hành
+# ---------------------------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/

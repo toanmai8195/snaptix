@@ -26,7 +26,7 @@ handbook/
 
 | Task | Tên | File |
 |---|---|---|
-| | | |
+| P0-T01 | Cấu trúc thư mục com/tm/server, .gitignore cho Go/Bazel | [phase-0/P0-T01.md](phase-0/P0-T01.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -34,7 +34,8 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 
 | Chủ đề | Task | Bài học | Link |
 |---|---|---|---|
-| | | | |
+| `git` | P0-T01 | Git không lưu thư mục rỗng; README giữ thư mục | [P0-T01](phase-0/P0-T01.md#git-lưu-file-không-lưu-thư-mục) |
+| `git` | P0-T01 | Cú pháp `.gitignore`; `git check-ignore -v --no-index` | [P0-T01](phase-0/P0-T01.md#cú-pháp-gitignore-và-git-check-ignore) |
 
 ## Mẫu một file
 

@@ -35,7 +35,15 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
 ## Task
 
 ### infra
-- [ ] **P0-T01** Cấu trúc thư mục `com/tm/server`, `.gitignore` cho Go/Bazel
+- [x] **P0-T01** Cấu trúc thư mục `com/tm/server`, `.gitignore` cho Go/Bazel
+  - [x] 1. Test case: P0-T01-TC01..TC04 + kế hoạch subtask — đã được duyệt
+  - [x] 2. Code
+    - [x] 2.1 Tạo `com/tm/server/README.md`
+    - [x] 2.2 Thêm pattern Go/Bazel/editor vào `.gitignore`
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `chore(server): add com/tm/server and Go/Bazel gitignore [P0-T01]` · Push: có
 - [ ] **P0-T02** `deploy/docker-compose.yml` chỉ có PostgreSQL core (5432), healthcheck, volume
 
 ### db
