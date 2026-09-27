@@ -1,0 +1,35 @@
+# Hạ tầng local của snaptix. Hiện chỉ có PostgreSQL cho core service.
+#
+#   docker compose -f deploy/docker-compose.yml up -d --wait   # chờ tới khi healthy
+#   docker compose -f deploy/docker-compose.yml down             # dừng, giữ dữ liệu
+#   docker compose -f deploy/docker-compose.yml down -v          # dừng, XOÁ dữ liệu
+
+# Tên project: tiền tố cho container, network, volume (mặc định sẽ là tên thư mục "deploy").
+name: snaptix
+
+services:
+  postgres-core:
+    # Pin phiên bản cụ thể: ai chạy lúc nào cũng ra cùng một PG.
+    image: postgres:17.6-alpine
+    environment:
+      # Image PG chính thức đọc 3 biến này ở lần khởi động đầu để tạo user + database.
+      POSTGRES_USER: snaptix
+      POSTGRES_PASSWORD: snaptix
+      POSTGRES_DB: core
+    ports:
+      - "5432:5432" # cổng máy host : cổng trong container
+    volumes:
+      # Dữ liệu PG nằm ở /var/lib/postgresql/data trong container.
+      # Gắn named volume vào đó để dữ liệu sống lâu hơn container.
+      - pg-core:/var/lib/postgresql/data
+    healthcheck:
+      # pg_isready: công cụ có sẵn trong image, trả 0 khi PG nhận kết nối.
+      # $$ để compose không tự thay biến; biến được đọc bên trong container.
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 2s   # kiểm tra mỗi 2 giây
+      timeout: 3s    # mỗi lần kiểm tra tối đa 3 giây
+      retries: 30    # sai 30 lần liên tiếp → unhealthy
+
+# Named volume do Docker quản lý; chỉ bị xoá khi chạy `down -v`.
+volumes:
+  pg-core:

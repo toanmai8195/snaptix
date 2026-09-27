@@ -27,6 +27,7 @@ handbook/
 | Task | Tên | File |
 |---|---|---|
 | P0-T01 | Cấu trúc thư mục com/tm/server, .gitignore cho Go/Bazel | [phase-0/P0-T01.md](phase-0/P0-T01.md) |
+| P0-T02 | docker-compose chỉ có PostgreSQL core | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -36,6 +37,8 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 |---|---|---|---|
 | `git` | P0-T01 | Git không lưu thư mục rỗng; README giữ thư mục | [P0-T01](phase-0/P0-T01.md#git-lưu-file-không-lưu-thư-mục) |
 | `git` | P0-T01 | Cú pháp `.gitignore`; `git check-ignore -v --no-index` | [P0-T01](phase-0/P0-T01.md#cú-pháp-gitignore-và-git-check-ignore) |
+| `docker` `pg` | P0-T02 | Container tạm thời; named volume, `down` vs `down -v` | [P0-T02](phase-0/P0-T02.md#container-là-tạm-thời--named-volume-giữ-dữ-liệu) |
+| `docker/compose` | P0-T02 | Healthcheck + `up --wait`; `$$` trong healthcheck | [P0-T02](phase-0/P0-T02.md#healthcheck--up---wait-đang-chạy--sẵn-sàng) |
 
 ## Mẫu một file
 

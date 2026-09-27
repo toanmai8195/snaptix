@@ -44,7 +44,16 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `chore(server): add com/tm/server and Go/Bazel gitignore [P0-T01]` · Push: có
-- [ ] **P0-T02** `deploy/docker-compose.yml` chỉ có PostgreSQL core (5432), healthcheck, volume
+- [x] **P0-T02** `deploy/docker-compose.yml` chỉ có PostgreSQL core (5432), healthcheck, volume
+  - [x] 1. Test case: P0-T02-TC01..TC04 + kế hoạch subtask — đã được duyệt
+  - [x] 2. Code
+    - [x] 2.1 Compose tối thiểu: service `postgres-core`, env, cổng 5432
+    - [x] 2.2 Named volume `pg-core`
+    - [x] 2.3 Healthcheck `pg_isready`, tên project, `up --wait`
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build(deploy): docker-compose with PostgreSQL core [P0-T02]` · Push: không
 
 ### db
 - [ ] **P0-T03** goose migration cho PG core: `scripts/migrate.sh`, migration rỗng đầu tiên
