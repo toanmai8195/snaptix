@@ -12,7 +12,7 @@ COMPOSE := docker compose -f $(ROOT)deploy/docker-compose.yml
 SERVER := $(ROOT)com/tm/server
 
 # Target không phải tên file: có file tên "test" trong thư mục thì `make test` vẫn chạy.
-.PHONY: help up down migrate test gazelle
+.PHONY: help up down migrate test test-go gazelle
 .DEFAULT_GOAL := help
 
 help: ## Liệt kê target
@@ -27,8 +27,11 @@ down: ## Dừng hạ tầng local, GIỮ dữ liệu (xoá dữ liệu: docker c
 migrate: ## Áp dụng migration PG core (goose up)
 	$(ROOT)scripts/migrate.sh up
 
+test: ## Chạy đúng các bước CI cho server: gazelle diff, lint, bazel build, bazel test (cần Docker)
+	$(ROOT)scripts/ci/run.sh server
+
 # Mỗi dòng recipe chạy trong một shell riêng → `cd` phải cùng dòng với lệnh.
-test: ## go vet + go test -race cho server (integration test cần Docker, tự skip nếu không có)
+test-go: ## Vòng dev nhanh: go vet + go test -race cho server
 	cd $(SERVER) && go vet ./...
 	cd $(SERVER) && go test -race ./...
 

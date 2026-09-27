@@ -23,7 +23,7 @@ func statusOf(t *testing.T, url string) int {
 		t.Logf("GET %s: %v", url, err)
 		return 0
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	_, _ = io.Copy(io.Discard, resp.Body)
 	return resp.StatusCode
 }
