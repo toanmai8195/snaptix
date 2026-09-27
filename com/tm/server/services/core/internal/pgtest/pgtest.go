@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"sync/atomic"
 	"testing"
@@ -206,6 +207,12 @@ func Run(m *testing.M) int {
 	case testing.Short():
 		skipReason = "integration test: bỏ qua khi chạy -short"
 	case !dockerAvailable():
+		// CI đặt PGTEST_REQUIRE_DOCKER=1: không có Docker là lỗi môi trường, không được lặng lẽ skip
+		// (CI xanh phải nghĩa là integration test đã chạy thật).
+		if os.Getenv("PGTEST_REQUIRE_DOCKER") != "" {
+			log.Print("pgtest: PGTEST_REQUIRE_DOCKER đặt nhưng không kết nối được Docker")
+			return 1
+		}
 		skipReason = "integration test: không có Docker"
 	default:
 		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)

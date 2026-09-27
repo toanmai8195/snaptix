@@ -229,8 +229,8 @@ Workflow `.github/workflows/ci.yml` chỉ gọi script trong `scripts/ci/` — c
 
 | Thay đổi | Chạy |
 |---|---|
-| Mọi thay đổi | Job `repo`: check-structure, check-gitignore, check-migrations, test script |
-| `com/tm/server/**` | Job `server`: gazelle `-mode=diff`, golangci-lint v2.6.2, `bazel build //...`, `bazel test` các target bị ảnh hưởng (`scripts/ci/bazel-affected-tests.sh`, dựa trên `rdeps`) |
+| Mọi thay đổi | Job `repo`: check-structure, check-gitignore, check-migrations, test script *(chưa có — P0 chỉ dựng job `server`)* |
+| `com/tm/server/**` | Job `server`: gazelle `-mode=diff`, golangci-lint v2.6.2 (`go run ...@v2.6.2`, cấu hình `com/tm/server/.golangci.yml`), `bazel build //...`, `bazel test` các target bị ảnh hưởng (`scripts/ci/bazel-affected-tests.sh`, dựa trên `rdeps`; đổi `MODULE.bazel`/`go.mod`/`.bazelrc`/`*.bzl` → test hết). Integration test bắt buộc chạy (`PGTEST_REQUIRE_DOCKER=1`), không được skip |
 | `com/tm/app/**` | Job `app`: `pnpm install --frozen-lockfile`, `pnpm --filter "...[BASE]" lint test build` |
 | `.github/**`, `scripts/ci/**` | Cả `server` và `app` |
 | `com/tm/server/api/**`, `com/tm/app/api/**` | Cả hai + sinh lại code và `git diff --exit-code` |

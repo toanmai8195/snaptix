@@ -35,6 +35,7 @@ handbook/
 | P0-T07 | Image OCI cho core: macro com_tm_go_image, rules_oci, distroless | [phase-0/P0-T07.md](phase-0/P0-T07.md) |
 | P0-T08 | Khung testcontainers-go cho integration test với PG | [phase-0/P0-T08.md](phase-0/P0-T08.md) |
 | P0-T09 | Makefile: up, down, migrate, test, gazelle | [phase-0/P0-T09.md](phase-0/P0-T09.md) |
+| P0-T10 | GitHub Actions cho Go: gazelle diff, golangci-lint, bazel test bị ảnh hưởng | [phase-0/P0-T10.md](phase-0/P0-T10.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -76,6 +77,10 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `make` | P0-T09 | Makefile là mục lục lệnh; `help` tự sinh; `.PHONY`; mỗi dòng recipe một shell | [P0-T09](phase-0/P0-T09.md#makefile-là-mục-lục-lệnh-không-chứa-logic) |
 | `make` | P0-T09 | `ROOT` theo vị trí Makefile (`MAKEFILE_LIST`) | [P0-T09](phase-0/P0-T09.md#đường-dẫn-theo-vị-trí-makefile) |
 | `docker/compose` | P0-T09 | `COMPOSE_PROJECT_NAME` ưu tiên hơn `name:` — đo "máy sạch" không phá DB | [P0-T09](phase-0/P0-T09.md#đo-p0-at01-mà-không-phá-db-đang-dùng) |
+| `ci/github-actions` `bash` | P0-T10 | CI mỏng: workflow chỉ gọi `scripts/ci/run.sh`; `::group::`/`::error::` | [P0-T10](phase-0/P0-T10.md#ci-mỏng-workflow-chỉ-gọi-script) |
+| `go/lint` | P0-T10 | golangci-lint pin v2.6.2 qua `go run`; errcheck bắt `Close()` bỏ lỗi | [P0-T10](phase-0/P0-T10.md#golangci-lint-pin-phiên-bản-chạy-bằng-go-run) |
+| `bazel/query` `git` | P0-T10 | Test bị ảnh hưởng: `git diff A...B` → label → `rdeps` | [P0-T10](phase-0/P0-T10.md#test-target-bị-ảnh-hưởng-bằng-bazel-query-rdeps) |
+| `ci/github-actions` `bazel` | P0-T10 | Lọc đường dẫn ở job, `paths-filter` base khi push, cache Bazel | [P0-T10](phase-0/P0-T10.md#workflow-lọc-đường-dẫn-ở-job-cache-bazel) |
 
 ## Mẫu một file
 

@@ -138,17 +138,17 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `build: Makefile with up, down, migrate, test, gazelle [P0-T09]` · Push: có
-- [ ] **P0-T10** GitHub Actions cho Go: gazelle diff, golangci-lint, `bazel test` target bị ảnh hưởng `[G14]`
+- [x] **P0-T10** GitHub Actions cho Go: gazelle diff, golangci-lint, `bazel test` target bị ảnh hưởng `[G14]`
   - [x] 1. Test case: P0-T10-TC01..TC09 + kế hoạch subtask — người dùng cho phép tự duyệt ("hoàn thành luôn P0")
-  - [ ] 2. Code
-    - [ ] 2.1 golangci-lint v2.6.2 + `.golangci.yml`, sửa lỗi lint
-    - [ ] 2.2 `scripts/ci/bazel-affected-tests.sh`: test target bị ảnh hưởng qua `rdeps`
-    - [ ] 2.3 `scripts/ci/run.sh server [BASE]`: gazelle diff → lint → build → test bị ảnh hưởng; `make test` gọi script
-    - [ ] 2.4 `.github/workflows/ci.yml`: job `changes` (lọc đường dẫn) + job `server`
-  - [ ] 3. Unit test
-  - [ ] 4. Build + unit test pass
-  - [ ] 5. Test case pass + handbook
-  - [ ] 6. Commit: `<type(scope): mô tả [P0-T10]>` · Push: có/không
+  - [x] 2. Code
+    - [x] 2.1 golangci-lint v2.6.2 + `.golangci.yml`, sửa lỗi lint
+    - [x] 2.2 `scripts/ci/bazel-affected-tests.sh`: test target bị ảnh hưởng qua `rdeps`
+    - [x] 2.3 `scripts/ci/run.sh server [BASE]`: gazelle diff → lint → build → test bị ảnh hưởng; `make test` gọi script
+    - [x] 2.4 `.github/workflows/ci.yml`: job `changes` (lọc đường dẫn) + job `server`
+  - [x] 3. Unit test — script CI kiểm bằng TC01–TC04 (worktree giả lập thay đổi); không có code Go mới ngoài `pgtest`
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook (TC05, TC07 kiểm sau push — cập nhật ở commit đóng phase)
+  - [x] 6. Commit: `ci: GitHub Actions for Go — gazelle diff, golangci-lint, affected bazel tests [P0-T10][G14]` · Push: có
 
 ## Challenge
 

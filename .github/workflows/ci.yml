@@ -26,6 +26,10 @@ jobs:
       - uses: dorny/paths-filter@v4
         id: filter
         with:
+          # Push: so với commit trước khi push. Không đặt thì push lên nhánh khác main bị so với main
+          # (sau squash-merge, lịch sử lệch → nhánh chỉ sửa docs vẫn bị coi là đổi server).
+          # Nhánh mới (before = 000…) hoặc PR: để trống → mặc định của action.
+          base: ${{ github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000' && github.event.before || '' }}
           filters: |
             server:
               - 'com/tm/server/**'

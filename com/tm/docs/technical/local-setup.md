@@ -73,15 +73,15 @@ Sao chép `.env.example` thành `.env` ở mỗi app/service.
 
 ## Build & kiểm thử
 
-`make test` chạy đúng các bước CI (`scripts/ci/run.sh repo|server|app`). Chi tiết từng phần:
+`make test` chạy đúng các bước CI (`scripts/ci/run.sh server`: gazelle diff → golangci-lint → `bazel build //...` → `bazel test`; cần Docker cho integration test). `make test-go` là vòng dev nhanh (`go vet` + `go test -race`). Chi tiết từng phần:
 
 ```bash
 # Server
 cd com/tm/server
-go test ./...                 # vòng dev nhanh
+go test ./...                 # vòng dev nhanh (-short: bỏ integration test cần Docker)
 bazel run //:gazelle          # sau khi thêm/xoá file Go hoặc import
 bazel test //...              # như CI
-bazel build //services/core/cmd/server:image   # image OCI
+bazel run --config=linux-arm64 //services/core/cmd/server:server_docker   # image OCI → Docker (x86: linux-amd64)
 
 # App
 cd com/tm/app
