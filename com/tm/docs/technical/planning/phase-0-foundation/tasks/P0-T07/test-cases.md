@@ -1,0 +1,35 @@
+# Test cases — P0-T07: Image OCI cho core bằng macro com_tm_go_image (rules_oci, distroless, non-root)
+
+> Viết ở bước 1, chờ người dùng duyệt trước khi code. Task: xem [README phase](../../README.md). Challenge: G14.
+
+Mọi lệnh `bazel` chạy trong `com/tm/server`. Quy ước theo [project-structure](../../../../project-structure.md#thiết-lập-bazel): macro `com_tm_go_image` ở `tools/rules/com_tm_container.bzl`, gazelle `map_kind` cho mọi `go_binary`, sinh `<name>`, `<name>_image`, `<name>_docker` (tag `com.tm.go.<image_name>:v1.0.0`), `<name>_push` chỉ khi có `repository`; base distroless pin digest, user 65532; build image bằng `--config=linux-arm64` (Apple Silicon) / `--config=linux-amd64`. Target core: `//services/core/cmd/server:server`, `image_name = "core-server"`.
+
+**Không cần Docker để build image** — rules_oci tự ghép layer; Docker chỉ dùng để `load` + chạy thử.
+
+**Chạy container cần PG**: trong container `localhost` là chính container → dùng network của compose (`--network snaptix_default`, host `postgres-core`).
+
+**Ngoài phạm vi**: push lên registry (chưa có registry — không sinh `_push`), image `core-worker` (chưa có binary worker), đưa core vào `docker-compose.yml`.
+
+| ID | Loại | Kịch bản | Kết quả mong đợi | Trạng thái |
+|---|---|---|---|---|
+| P0-T07-TC01 | Manual | `bazel build --config=linux-arm64 //services/core/cmd/server:server` và `--config=linux-amd64`, xem bằng `file` | Hai binary `ELF 64-bit`, lần lượt `ARM aarch64` / `x86-64`, `statically linked` — build chéo từ macOS không cần Docker | ✅ |
+| P0-T07-TC02 | Manual | Không `--config`: `bazel build //...`, `bazel test //...` trên macOS | Pass; target image được **bỏ qua** (chỉ build cho Linux), binary host vẫn build/chạy được | ✅ |
+| P0-T07-TC03 | Manual | `bazel run --config=linux-arm64 //services/core/cmd/server:server_docker`; lặp lại với `linux-amd64` | `docker images` có `com.tm.go.core-server:v1.0.0`; `docker inspect` cho `Architecture` đúng `arm64` / `amd64` | ✅ |
+| P0-T07-TC04 | Manual | `docker inspect com.tm.go.core-server:v1.0.0`; `docker run --entrypoint sh ...` | `Config.User` = `65532`; `Entrypoint` là binary core; không có shell (`sh` không tồn tại); image < 30 MB | ✅ |
+| P0-T07-TC05 | Manual | `docker run -d -p 8080:8080 --network snaptix_default -e CORE_DATABASE_URL=postgres://snaptix:snaptix@postgres-core:5432/core?sslmode=disable ...`; gọi `/healthz`, `/readyz`; `docker logs` | `/healthz` 200, `/readyz` 200; log là JSON một dòng | ✅ |
+| P0-T07-TC06 | Manual | Container đang chạy, `docker stop <id>` | Log `shutting down` (`terminated`) → `http server stopped` → `db pool closed`; `State.ExitCode` = `0`; dừng trong vài giây (không phải chờ SIGKILL sau 10s) | ✅ |
+| P0-T07-TC07 | Manual | Build `server_image` 2 lần (lần 2 sau khi xoá output: `bazel clean`) | Digest image (`index.json`) giống hệt nhau — build tái lập | ✅ |
+| P0-T07-TC08 | Manual | `bazel run //:gazelle` (2 lần); `bazel query 'kind(".*", //services/core/cmd/server:*)'` | `BUILD.bazel` của server dùng `com_tm_go_image` (không còn `go_binary`), giữ `image_name = "core-server"`; lần 2 không đổi; có `server`, `server_image`, `server_docker`, **không** có `server_push` | ✅ |
+| P0-T07-TC09 | Manual | `go build ./...`, `go run ./services/core/cmd/server` | Vẫn chạy bằng `go` như trước — macro/gazelle không ảnh hưởng luồng `go` | ✅ |
+| P0-T07-TC10 | Manual | `go vet ./...`, `go test -race ./...`, `bazel test //...` | Pass; `MODULE.bazel.lock` cập nhật và commit cùng | ✅ |
+
+Test nghiệm thu liên quan: P0-AT11 (chạy image bằng Docker, `/healthz` 200, `docker stop` thoát 0) — kiểm manual ở TC05–TC06, bản integration ở P0-T08; challenge G14 (tiêu chí "core build được thành image").
+
+## Kế hoạch subtask
+
+| # | Làm gì | File | Kiến thức mới |
+|---|---|---|---|
+| 2.1 | Build chéo: `platform` `linux_amd64`, `linux_arm64` trong `BUILD.bazel` gốc; `.bazelrc` thêm `build:linux-arm64 --platforms=//:linux_arm64` (và amd64); build binary core cho Linux, kiểm bằng `file` | `BUILD.bazel`, `.bazelrc` | Bazel platform + constraint (`@platforms//os:linux`, `@platforms//cpu:arm64`); `--platforms` và `--config`; Go build chéo dễ vì pure Go + CGO tắt (đã đặt ở P0-T04) → binary tĩnh chạy được trên image không có libc |
+| 2.2 | Image viết tay, theo cấu trúc của project `thor`: thêm `bazel_skylib`, `rules_oci` 2.2.6, `tar.bzl` 0.3.0 (bản đã chạy ở thor với Bazel 8.7 / rules_go 0.53) vào `MODULE.bazel`; `oci.pull` distroless `static-debian12:nonroot` **pin digest**, 2 platform; `.bazelrc` thêm `--strategy=CopyFile=local`, `--strategy=CopyToDirectory=local`, `DOCKER_CONFIG=/dev/null` như thor. Trong `services/core/cmd/server/BUILD.bazel` viết tay `copy_file` (binary ra `bin/server`) → `tar` (layer) → `oci_image` (base, entrypoint, user `65532`) → `oci_load` (tag); `bazel run --config=linux-arm64 ...` rồi `docker run` | `MODULE.bazel`, `.bazelrc`, `services/core/cmd/server/BUILD.bazel` | Image OCI = các layer (tar) + config JSON + manifest; vì sao distroless `static` (không shell, không libc, không package manager → nhỏ, ít CVE; Go tĩnh không cần libc) thay cho `distroless/base` của thor; tag có thể đổi còn digest thì không → pin digest; rules_oci build image không cần Docker daemon, không Dockerfile; `oci_load` chỉ để nạp vào Docker local; vì sao `copy_file` (rules_go để binary ở `server_/server`); `target_compatible_with` Linux để `bazel build //...` trên macOS bỏ qua image |
+| 2.3 | Gom thành macro theo cấu trúc thor trong `tools/rules/com_tm_container.bzl`: helper chung `_container_targets(name, base, repo_tag, tar_srcs, layers, entrypoint, env, exposed_ports, repository, image_tag, ...)` sinh `_tar` → `_image` → `_docker` → `_push` (chỉ khi có `repository`); `com_tm_go_image(name, embed, data, args, exposed_ports, env, image_name = name, repository, image_tag, visibility)` sinh `go_binary` (`pure`, `static`) + `copy_file` + gọi helper. Khác thor: có `image_name` (tag `com.tm.go.<image_name>:v1.0.0`), base static nonroot + user `65532`, `target_compatible_with` Linux, lấy package bằng `native.package_name()` thay vì bắt truyền `package_name`. BUILD của server dùng macro | `tools/BUILD.bazel`, `tools/rules/BUILD.bazel`, `tools/rules/com_tm_container.bzl`, `services/core/cmd/server/BUILD.bazel` | Starlark: `load`, macro (hàm sinh nhiều target) vs rule; `native.package_name()`; legacy macro vs symbolic macro của Bazel 8 và vì sao chọn legacy (gazelle cần gọi như một rule bình thường); tách helper theo ngôn ngữ để sau thêm macro khác không lặp lại phần image |
+| 2.4 | Gazelle `map_kind`: directive `# gazelle:map_kind go_binary com_tm_go_image //tools/rules:com_tm_container.bzl` trong `BUILD.bazel` gốc; chạy gazelle để nó tự viết lại BUILD của server; thêm `image_name = "core-server"` và kiểm gazelle giữ attr đó | `BUILD.bazel`, `services/core/cmd/server/BUILD.bazel` | `map_kind`: gazelle vẫn hiểu target là `go_binary` nhưng ghi ra kind khác → mọi binary mới tự có image; gazelle giữ attr nó không quản lý (`image_name`); vì sao không viết BUILD tay cho binary |

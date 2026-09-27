@@ -32,6 +32,7 @@ handbook/
 | P0-T04 | Bazel + Gazelle + một go.mod | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
 | P0-T05 | Skeleton core: HTTP server, chi, config, slog, pgxpool, /readyz | [phase-0/P0-T05.md](phase-0/P0-T05.md) |
 | P0-T06 | Graceful shutdown: SIGTERM, Shutdown có timeout, đóng pool sau cùng | [phase-0/P0-T06.md](phase-0/P0-T06.md) |
+| P0-T07 | Image OCI cho core: macro com_tm_go_image, rules_oci, distroless | [phase-0/P0-T07.md](phase-0/P0-T07.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -61,6 +62,10 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `go/signal` `go/goroutine` `go/channel` | P0-T06 | SIGTERM/SIGINT/SIGKILL; goroutine + channel buffer 1 + select; signal lần 2 | [P0-T06](phase-0/P0-T06.md#signal-goroutine-channel-select) |
 | `go/net-http` `go/context` | P0-T06 | `Shutdown` có timeout, `Close` khi quá hạn; timeout < grace period | [P0-T06](phase-0/P0-T06.md#httpservershutdown-có-timeout-close-khi-quá-hạn) |
 | `go/testing` `go/net` | P0-T06 | `net.Listen` + cổng `:0`; nhận ctx thay cho signal để test được | [P0-T06](phase-0/P0-T06.md#thiết-kế-để-test-được-netlisten-cổng-0-ctx-thay-cho-signal) |
+| `bazel/platform` `go/cross-compile` | P0-T07 | Platform + `--config=linux-*`; Go thuần build chéo ra binary tĩnh | [P0-T07](phase-0/P0-T07.md#build-chéo-bằng-bazel-platform) |
+| `docker/oci` `bazel/rules_oci` | P0-T07 | Image = config + layer tar; distroless static; pin digest; Linux-only target; build tái lập | [P0-T07](phase-0/P0-T07.md#image-oci-không-cần-dockerfile-rules_oci-distroless-static-pin-digest) |
+| `bazel/starlark` `bazel/macro` | P0-T07 | Macro `com_tm_go_image` + `_container_targets` (cấu trúc thor); `native.package_name()`; legacy vs symbolic macro | [P0-T07](phase-0/P0-T07.md#macro-com_tm_go_image-theo-cấu-trúc-thor) |
+| `bazel/gazelle` | P0-T07 | `map_kind` go_binary → com_tm_go_image; gazelle giữ attr lạ | [P0-T07](phase-0/P0-T07.md#gazelle-map_kind-mọi-binary-tự-có-image) |
 
 ## Mẫu một file
 

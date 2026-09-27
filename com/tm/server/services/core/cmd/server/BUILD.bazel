@@ -1,4 +1,5 @@
-load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+load("//tools/rules:com_tm_container.bzl", "com_tm_go_image")
 
 go_library(
     name = "server_lib",
@@ -14,9 +15,13 @@ go_library(
     ],
 )
 
-go_binary(
+# Binary + image: :server, :server_image, :server_docker (tag com.tm.go.core-server:v1.0.0)
+#   bazel run --config=linux-arm64 //services/core/cmd/server:server_docker
+com_tm_go_image(
     name = "server",
     embed = [":server_lib"],
+    exposed_ports = ["8080/tcp"],
+    image_name = "core-server",
     visibility = ["//visibility:public"],
 )
 

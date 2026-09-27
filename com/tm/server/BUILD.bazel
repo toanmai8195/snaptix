@@ -6,4 +6,24 @@ load("@gazelle//:def.bzl", "gazelle")
 # Directive (comment bắt đầu bằng "# gazelle:" là cấu hình cho gazelle):
 # gazelle:prefix github.com/toanmai8195/snaptix/com/tm/server
 # gazelle:go_naming_convention import
+# Mọi go_binary tạo qua macro com_tm_go_image (binary + image), như thor:
+# gazelle:map_kind go_binary com_tm_go_image //tools/rules:com_tm_container.bzl
 gazelle(name = "gazelle")
+
+# Nền tảng đích để build chéo: binary/image chạy trên Linux, dù đang build trên macOS.
+# Chọn bằng --config=linux-arm64 | linux-amd64 (xem .bazelrc).
+platform(
+    name = "linux_arm64",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:arm64",
+    ],
+)
+
+platform(
+    name = "linux_amd64",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)

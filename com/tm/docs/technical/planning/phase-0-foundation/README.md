@@ -103,7 +103,17 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `feat(core): graceful shutdown on SIGTERM with timeout, close pool last [P0-T06][G3]` · Push: có
-- [ ] **P0-T07** Image OCI cho core bằng macro `com_tm_go_image` (rules_oci, distroless, non-root) `[G14]`
+- [x] **P0-T07** Image OCI cho core bằng macro `com_tm_go_image` (rules_oci, distroless, non-root) `[G14]`
+  - [x] 1. Test case: P0-T07-TC01..TC10 + kế hoạch subtask — đã được duyệt
+  - [x] 2. Code
+    - [x] 2.1 Build chéo: platform `linux_amd64`/`linux_arm64`, `--config=linux-*`
+    - [x] 2.2 Image viết tay (theo thor): `rules_oci`, distroless static pin digest, `copy_file` → `tar` → `oci_image` → `oci_load`
+    - [x] 2.3 Macro `com_tm_go_image` + `_container_targets` (cấu trúc thor) trong `tools/rules/com_tm_container.bzl`
+    - [x] 2.4 Gazelle `map_kind` cho `go_binary`, `image_name = "core-server"`
+  - [x] 3. Unit test — không có code Go mới; image kiểm bằng TC03–TC08, test tự động chạy image (P0-AT11) ở P0-T08
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build(core): OCI image via com_tm_go_image macro (rules_oci, distroless, non-root) [P0-T07][G14]` · Push: có
 
 ### qa
 - [ ] **P0-T08** Khung testcontainers-go cho integration test với PG
