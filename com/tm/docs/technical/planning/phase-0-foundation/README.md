@@ -129,7 +129,15 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 6. Commit: `test(core): testcontainers-go framework for PG integration tests [P0-T08]` · Push: có
 
 ### infra
-- [ ] **P0-T09** Makefile: `up`, `down`, `migrate`, `test`, `gazelle`
+- [x] **P0-T09** Makefile: `up`, `down`, `migrate`, `test`, `gazelle`
+  - [x] 1. Test case: P0-T09-TC01..TC07 + kế hoạch subtask — người dùng cho phép tự duyệt ("hoàn thành luôn P0")
+  - [x] 2. Code
+    - [x] 2.1 Makefile: `help` (mặc định), `up`, `down`
+    - [x] 2.2 `migrate`, `test`, `gazelle`
+  - [x] 3. Unit test — không có code Go; Makefile kiểm bằng TC01–TC07
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build: Makefile with up, down, migrate, test, gazelle [P0-T09]` · Push: có
 - [ ] **P0-T10** GitHub Actions cho Go: gazelle diff, golangci-lint, `bazel test` target bị ảnh hưởng `[G14]`
 
 ## Challenge

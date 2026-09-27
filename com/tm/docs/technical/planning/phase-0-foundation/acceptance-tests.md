@@ -4,7 +4,7 @@
 
 | ID | Loại | Kịch bản | Kết quả mong đợi | Requirement / Challenge | Trạng thái |
 |---|---|---|---|---|---|
-| P0-AT01 | Manual | Máy sạch, clone repo, chạy `make up && make migrate` | PG healthy, migration áp dụng, xong trong < 5 phút | P0-FR1, P0-FR2 | ⬜ |
+| P0-AT01 | Manual | Máy sạch, clone repo, chạy `make up && make migrate` | PG healthy, migration áp dụng, xong trong < 5 phút | P0-FR1, P0-FR2 | ✅ 3.8s (clone mới, project compose riêng; image PG + module goose đã cache) — P0-T09-TC07 |
 | P0-AT02 | Integration | Gọi `core /readyz` khi PG đang chạy | 200 | P0-FR3 | ✅ `integration/readyz_test.go` — TestReadyzWithPostgres |
 | P0-AT03 | Integration | Dừng PG, gọi `core /readyz` | 503; `/healthz` vẫn 200 | P0-FR3 | ✅ `integration/readyz_test.go` — TestReadyzWhenPostgresStops |
 | P0-AT04 | CI | Mở PR có lỗi lint Go | CI fail ở bước lint | P0-FR4 | ⬜ |

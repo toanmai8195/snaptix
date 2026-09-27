@@ -34,6 +34,7 @@ handbook/
 | P0-T06 | Graceful shutdown: SIGTERM, Shutdown có timeout, đóng pool sau cùng | [phase-0/P0-T06.md](phase-0/P0-T06.md) |
 | P0-T07 | Image OCI cho core: macro com_tm_go_image, rules_oci, distroless | [phase-0/P0-T07.md](phase-0/P0-T07.md) |
 | P0-T08 | Khung testcontainers-go cho integration test với PG | [phase-0/P0-T08.md](phase-0/P0-T08.md) |
+| P0-T09 | Makefile: up, down, migrate, test, gazelle | [phase-0/P0-T09.md](phase-0/P0-T09.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -72,6 +73,9 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `pg/template-database` `go/testing` | P0-T08 | `TestMain` một container; `CREATE DATABASE ... TEMPLATE` cho từng test; goose làm thư viện | [P0-T08](phase-0/P0-T08.md#một-container-cho-cả-package-database-template-cho-từng-test) |
 | `docker/testcontainers` `pg/pgx` | P0-T08 | Test dừng/bật PG: container riêng, cổng host cố định, `eventually` | [P0-T08](phase-0/P0-T08.md#test-phá-hạ-tầng-container-riêng-cổng-host-cố-định) |
 | `bazel` `go/testing` | P0-T08 | Tag `requires-docker`, `size = "large"`, lọc bằng `--test_tag_filters` | [P0-T08](phase-0/P0-T08.md#tag-bazel-cho-test-cần-docker) |
+| `make` | P0-T09 | Makefile là mục lục lệnh; `help` tự sinh; `.PHONY`; mỗi dòng recipe một shell | [P0-T09](phase-0/P0-T09.md#makefile-là-mục-lục-lệnh-không-chứa-logic) |
+| `make` | P0-T09 | `ROOT` theo vị trí Makefile (`MAKEFILE_LIST`) | [P0-T09](phase-0/P0-T09.md#đường-dẫn-theo-vị-trí-makefile) |
+| `docker/compose` | P0-T09 | `COMPOSE_PROJECT_NAME` ưu tiên hơn `name:` — đo "máy sạch" không phá DB | [P0-T09](phase-0/P0-T09.md#đo-p0-at01-mà-không-phá-db-đang-dùng) |
 
 ## Mẫu một file
 
