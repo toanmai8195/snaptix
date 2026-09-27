@@ -1,0 +1,12 @@
+# In lệnh lỗi đầy đủ khi build fail
+build --verbose_failures
+# Test fail thì in output của test
+test --test_output=errors
+
+# Go thuần, tắt CGO: không cần C compiler / Xcode, binary tĩnh chạy được trên image tối giản
+build --@rules_go//go/config:pure
+build --action_env=CGO_ENABLED=0
+build --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+
+# Cấu hình cá nhân (không commit)
+try-import %workspace%/.bazelrc.user

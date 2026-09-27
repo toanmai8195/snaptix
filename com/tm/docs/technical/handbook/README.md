@@ -29,6 +29,7 @@ handbook/
 | P0-T01 | Cấu trúc thư mục com/tm/server, .gitignore cho Go/Bazel | [phase-0/P0-T01.md](phase-0/P0-T01.md) |
 | P0-T02 | docker-compose chỉ có PostgreSQL core | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
 | P0-T03 | goose migration cho PG core | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
+| P0-T04 | Bazel + Gazelle + một go.mod | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -43,6 +44,10 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `pg/migration` | P0-T03 | Migration vs initial script; cơ chế bảng version + transaction DDL của PG | [P0-T03](phase-0/P0-T03.md#cơ-chế-goose-bảng-version--transaction-của-pg) |
 | `go/tooling` | P0-T03 | `go run pkg@version`, build tag, `GOTOOLCHAIN=local` | [P0-T03](phase-0/P0-T03.md#pin-công-cụ-go-bằng-go-run-pkgversion) |
 | `bash` | P0-T03 | `set -euo pipefail`, `${VAR:-default}`, `"$@"`, ROOT theo vị trí script | [P0-T03](phase-0/P0-T03.md#bash-script-an-toàn) |
+| `go/modules` | P0-T04 | Module path = tiền tố import; một go.mod cho cả server | [P0-T04](phase-0/P0-T04.md#go-module-và-module-path) |
+| `bazel` | P0-T04 | Hermetic, cache theo nội dung, bzlmod, Go SDK riêng | [P0-T04](phase-0/P0-T04.md#bazel-hermetic-cache-theo-nội-dung-bzlmod) |
+| `bazel` `gazelle` | P0-T04 | Package / target / label; gazelle prefix + naming import | [P0-T04](phase-0/P0-T04.md#gazelle-package-target-label) |
+| `go/modules` `bazel` | P0-T04 | go get → go mod tidy → bazel mod tidy → gazelle; go.sum | [P0-T04](phase-0/P0-T04.md#thêm-thư-viện-ngoài-gomod-là-nguồn-sự-thật) |
 
 ## Mẫu một file
 

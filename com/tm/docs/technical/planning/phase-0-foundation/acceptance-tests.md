@@ -13,5 +13,5 @@
 | P0-AT07 | Integration | Request có handler chậm 3s, gửi SIGTERM sau 1s | Request trả 200, process thoát mã 0 | P0-NFR2, G3 | ⬜ |
 | P0-AT08 | Integration | Gửi SIGTERM rồi gửi request mới | Request mới bị từ chối | P0-NFR2, G3 | ⬜ |
 | P0-AT09 | Integration | Handler chạy quá shutdown timeout | Service vẫn thoát sau timeout, log cảnh báo | G3 | ⬜ |
-| P0-AT10 | Manual | Thêm package Go mới, chạy gazelle | Build/test pass bằng cả `go` và Bazel | G14 | ⬜ |
+| P0-AT10 | Manual | Thêm package Go mới, chạy gazelle | Build/test pass bằng cả `go` và Bazel | G14 | ✅ |
 | P0-AT11 | Integration | Chạy image core bằng Docker, `docker stop` | `/healthz` 200 trong container; thoát mã 0 | G14 | ⬜ |

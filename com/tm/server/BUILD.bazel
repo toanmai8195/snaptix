@@ -1,0 +1,9 @@
+load("@gazelle//:def.bzl", "gazelle")
+
+# Gazelle đọc code Go (package, import) và sinh / cập nhật BUILD.bazel.
+# Chạy: bazel run //:gazelle
+#
+# Directive (comment bắt đầu bằng "# gazelle:" là cấu hình cho gazelle):
+# gazelle:prefix github.com/toanmai8195/snaptix/com/tm/server
+# gazelle:go_naming_convention import
+gazelle(name = "gazelle")

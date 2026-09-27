@@ -68,7 +68,17 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 6. Commit: `build(db): goose migrations for PG core [P0-T03]` · Push: không
 
 ### core
-- [ ] **P0-T04** Bazel + Gazelle + một `go.mod` cho `com/tm/server` `[G14]`
+- [x] **P0-T04** Bazel + Gazelle + một `go.mod` cho `com/tm/server` `[G14]`
+  - [x] 1. Test case: P0-T04-TC01..TC05 + kế hoạch subtask — đã được duyệt
+  - [x] 2. Code
+    - [x] 2.1 `go mod init`, thử chương trình tạm
+    - [x] 2.2 Bazel tối thiểu: `.bazelversion`, `MODULE.bazel`, `.bazelrc`
+    - [x] 2.3 Target `//:gazelle` + directive; thử với `pkg/probe`
+    - [x] 2.4 Luồng thêm thư viện ngoài (`uuid`)
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build(server): Go module, Bazel and Gazelle for com/tm/server [P0-T04][G14]` · Push: không
 - [ ] **P0-T05** Skeleton core: hello world → HTTP server → chi router + `/healthz` → config từ env → log `slog` JSON → pgxpool + `/readyz`
 - [ ] **P0-T06** Graceful shutdown: SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
 - [ ] **P0-T07** Image OCI cho core bằng macro `com_tm_go_image` (rules_oci, distroless, non-root) `[G14]`
@@ -85,7 +95,7 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
 | # | Công nghệ | Challenge | Bối cảnh | Hướng giải | Hoàn thành khi | Trạng thái |
 |---|---|---|---|---|---|---|
 | G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | ⬜ |
-| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng; core build được thành image | ⬜ |
+| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng; core build được thành image | 🟨 |
 
 ## Definition of Done
 
