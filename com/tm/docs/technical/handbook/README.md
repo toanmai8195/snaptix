@@ -30,6 +30,7 @@ handbook/
 | P0-T02 | docker-compose chỉ có PostgreSQL core | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
 | P0-T03 | goose migration cho PG core | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
 | P0-T04 | Bazel + Gazelle + một go.mod | [phase-0/P0-T04.md](phase-0/P0-T04.md) |
+| P0-T05 | Skeleton core: HTTP server, chi, config, slog, pgxpool, /readyz | [phase-0/P0-T05.md](phase-0/P0-T05.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -48,6 +49,13 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `bazel` | P0-T04 | Hermetic, cache theo nội dung, bzlmod, Go SDK riêng | [P0-T04](phase-0/P0-T04.md#bazel-hermetic-cache-theo-nội-dung-bzlmod) |
 | `bazel` `gazelle` | P0-T04 | Package / target / label; gazelle prefix + naming import | [P0-T04](phase-0/P0-T04.md#gazelle-package-target-label) |
 | `go/modules` `bazel` | P0-T04 | go get → go mod tidy → bazel mod tidy → gazelle; go.sum | [P0-T04](phase-0/P0-T04.md#thêm-thư-viện-ngoài-gomod-là-nguồn-sự-thật) |
+| `go/basics` `bazel` | P0-T05 | Package main, `cmd/<tên>`; `go run` để lại process con mồ côi | [P0-T05](phase-0/P0-T05.md#package-main-và-thư-mục-cmd) |
+| `go/net-http` | P0-T05 | Handler / HandlerFunc; `http.Server` + `ReadHeaderTimeout` | [P0-T05](phase-0/P0-T05.md#nethttp-handler-handlerfunc-httpserver-có-timeout) |
+| `go/interface` `go/pointer` | P0-T05 | ResponseWriter là interface, `*Request` là con trỏ struct | [P0-T05](phase-0/P0-T05.md#responsewriter-là-interface-request-là-con-trỏ-tới-struct) |
+| `go/chi` `go/package` | P0-T05 | chi tương thích net/http; `internal/`; export bằng chữ hoa | [P0-T05](phase-0/P0-T05.md#chi-router-và-internal) |
+| `go/config` `go/errors` | P0-T05 | `loadConfig(getenv)`; `fmt.Errorf` `%q` `%w` | [P0-T05](phase-0/P0-T05.md#config-từ-env-truyền-getenv-như-tham-số) |
+| `go/slog` `go/middleware` | P0-T05 | slog JSON, logger tường minh; middleware bọc ResponseWriter | [P0-T05](phase-0/P0-T05.md#slog-json-và-middleware-log-request) |
+| `pg/pgx` `go/context` `k8s/probe` | P0-T05 | pgxpool lười; `/readyz` + `WithTimeout`; interface phía dùng; liveness vs readiness | [P0-T05](phase-0/P0-T05.md#pgxpool-lười-readyz-với-context-timeout-interface-phía-dùng) |
 
 ## Mẫu một file
 

@@ -79,7 +79,19 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `build(server): Go module, Bazel and Gazelle for com/tm/server [P0-T04][G14]` · Push: không
-- [ ] **P0-T05** Skeleton core: hello world → HTTP server → chi router + `/healthz` → config từ env → log `slog` JSON → pgxpool + `/readyz`
+- [x] **P0-T05** Skeleton core: hello world → HTTP server → chi router + `/healthz` → config từ env → log `slog` JSON → pgxpool + `/readyz`
+  - [x] 1. Test case: P0-T05-TC01..TC11 + kế hoạch subtask — đã được duyệt
+  - [x] 2. Code
+    - [x] 2.1 Hello world `services/core/cmd/server`
+    - [x] 2.2 HTTP server bằng `net/http` + `/healthz`
+    - [x] 2.3 chi router, package `internal/httpx`
+    - [x] 2.4 Config từ env (`loadConfig`)
+    - [x] 2.5 Log `slog` JSON + middleware log request
+    - [x] 2.6 pgxpool + `/readyz`
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `feat(core): skeleton core server with chi, slog, pgxpool and health endpoints [P0-T05]` · Push: có
 - [ ] **P0-T06** Graceful shutdown: SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
 - [ ] **P0-T07** Image OCI cho core bằng macro `com_tm_go_image` (rules_oci, distroless, non-root) `[G14]`
 

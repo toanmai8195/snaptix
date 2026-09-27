@@ -1,0 +1,25 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "httpx",
+    srcs = [
+        "health.go",
+        "log.go",
+        "router.go",
+    ],
+    importpath = "github.com/toanmai8195/snaptix/com/tm/server/services/core/internal/httpx",
+    visibility = ["//services/core:__subpackages__"],
+    deps = [
+        "@com_github_go_chi_chi_v5//:chi",
+        "@com_github_go_chi_chi_v5//middleware",
+    ],
+)
+
+go_test(
+    name = "httpx_test",
+    srcs = [
+        "health_test.go",
+        "log_test.go",
+    ],
+    embed = [":httpx"],
+)

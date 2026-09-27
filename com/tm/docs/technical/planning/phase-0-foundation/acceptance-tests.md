@@ -9,7 +9,7 @@
 | P0-AT03 | Integration | Dừng PG, gọi `core /readyz` | 503; `/healthz` vẫn 200 | P0-FR3 | ⬜ |
 | P0-AT04 | CI | Mở PR có lỗi lint Go | CI fail ở bước lint | P0-FR4 | ⬜ |
 | P0-AT05 | CI | PR chỉ sửa `com/tm/docs/**` | Không chạy job Go | G14 | ⬜ |
-| P0-AT06 | Manual | Gọi 1 request, xem log core | Mỗi dòng log là JSON có `time`, `level`, `msg` | P0-NFR1 | ⬜ |
+| P0-AT06 | Manual | Gọi 1 request, xem log core | Mỗi dòng log là JSON có `time`, `level`, `msg` | P0-NFR1 | ✅ |
 | P0-AT07 | Integration | Request có handler chậm 3s, gửi SIGTERM sau 1s | Request trả 200, process thoát mã 0 | P0-NFR2, G3 | ⬜ |
 | P0-AT08 | Integration | Gửi SIGTERM rồi gửi request mới | Request mới bị từ chối | P0-NFR2, G3 | ⬜ |
 | P0-AT09 | Integration | Handler chạy quá shutdown timeout | Service vẫn thoát sau timeout, log cảnh báo | G3 | ⬜ |
