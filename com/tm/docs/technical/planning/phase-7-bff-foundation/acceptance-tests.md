@@ -22,3 +22,6 @@
 | P7-AT16 | Manual | `explain()` truy vấn `users` theo `google_sub` | IXSCAN, không COLLSCAN | M2 | ⬜ |
 | P7-AT17 | E2E | Tìm chuyến trên web, xem chi tiết | Dữ liệu khớp API core | P7-FR4, P9-FR1 | ⬜ |
 | P7-AT18 | Manual | Gọi `bff /healthz?deep=1`, mở Grafana | Một trace chứa span bff → core → PG | P0-NFR2, G10 | ⬜ |
+| P7-AT19 | Integration | Dừng MongoDB, gọi `bff /readyz` | 503 trong ≤ 3s; `/healthz` vẫn 200 | P7-FR5 | ⬜ |
+| P7-AT20 | CI | PR có test TS fail | CI fail ở bước test | P7-FR5 | ⬜ |
+| P7-AT21 | CI | PR chỉ sửa `com/tm/app/**` | Không chạy job Go | P7-FR5 | ⬜ |

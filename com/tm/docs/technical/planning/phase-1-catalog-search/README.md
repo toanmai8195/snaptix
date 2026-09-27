@@ -32,30 +32,35 @@ Go: package theo nghiệp vụ, interface phía dùng, context, error value, tab
 | P1-FR5 | FR | Lỗi trả theo định dạng chuẩn trong [API](../../api.md#lỗi) |
 | P1-NFR1 | NFR | p99 query tìm chuyến < 20ms trên 10 triệu `trip_seats` |
 | P1-NFR2 | NFR | Mọi truy vấn DB tôn trọng deadline của request |
+| P1-NFR3 | NFR | Mọi dòng log của request có `request_id`; handler panic không làm sập server |
 
 ## Task
 
+### core — HTTP nền (chuyển từ Phase 0)
+- [ ] **P1-T01** Middleware request ID (`X-Request-ID` hợp lệ hoặc sinh mới) + gắn vào log
+- [ ] **P1-T02** Middleware recover (panic → 500 JSON, log stack) và access log (method, route, status, duration)
+
 ### db
-- [ ] **P1-T01** Migration: `stations`, `routes`, `route_stops`, `seat_layouts`, `layout_seats`, `vehicles` theo [database](../../database.md) _(trước đây P1-T01)_
-- [ ] **P1-T02** Migration: `fares`, `schedules`, `trips`, `trip_seats` _(trước đây P1-T02)_
-- [ ] **P1-T03** Index cho tìm chuyến: `trips (route_id, departure_at)`, index tìm tuyến theo cặp trạm `[P7]` _(trước đây P1-T03)_
-- [ ] **P1-T04** Seed script sinh dữ liệu lớn: 200 trạm, 500 tuyến, 1 năm lịch chạy, 10 triệu `trip_seats` _(trước đây P1-T04)_
-- [ ] **P1-T05** Viết query search bằng sqlc; đọc `EXPLAIN (ANALYZE, BUFFERS)`, tối ưu đến khi đạt NFR `[P7]` _(trước đây P1-T05)_
+- [ ] **P1-T03** Migration: `stations`, `routes`, `route_stops`, `seat_layouts`, `layout_seats`, `vehicles` theo [database](../../database.md) _(trước đây P1-T01)_
+- [ ] **P1-T04** Migration: `fares`, `schedules`, `trips`, `trip_seats` _(trước đây P1-T02)_
+- [ ] **P1-T05** Index cho tìm chuyến: `trips (route_id, departure_at)`, index tìm tuyến theo cặp trạm `[P7]` _(trước đây P1-T03)_
+- [ ] **P1-T06** Seed script sinh dữ liệu lớn: 200 trạm, 500 tuyến, 1 năm lịch chạy, 10 triệu `trip_seats` _(trước đây P1-T04)_
+- [ ] **P1-T07** Viết query search bằng sqlc; đọc `EXPLAIN (ANALYZE, BUFFERS)`, tối ưu đến khi đạt NFR `[P7]` _(trước đây P1-T05)_
 
 ### core
-- [ ] **P1-T06** Module `internal/catalog` theo vertical slice (types, hàm thuần, service, store, http); `internal/httpx`; theo [project-structure](../../project-structure.md#module-trong-core-modular-monolith) `[G11]` _(trước đây P1-T06)_
-- [ ] **P1-T07** Wiring thủ công trong `cmd/server/main.go` `[G12]` _(trước đây P1-T06a)_
-- [ ] **P1-T08** Kiểm tra ranh giới module tự động (Bazel visibility hoặc test import) theo [ADR-0001](../../adr/0001-modular-monolith-core.md) `[G11]` _(trước đây P1-T06b)_
-- [ ] **P1-T09** Domain error + mapping sang HTTP/`error.code` `[G7]` _(trước đây P1-T07)_
-- [ ] **P1-T10** Truyền `context.Context` từ handler → use case → repository, đặt timeout per-request `[G2]` _(trước đây P1-T08)_
-- [ ] **P1-T11** API `GET /internal/v1/trips/search`, `/trips/{id}`, `/trips/{id}/seats` _(trước đây P1-T09)_
-- [ ] **P1-T12** Tính giá thấp nhất theo đoạn và hạng ghế từ `fares` hợp lệ tại thời điểm hiện tại _(trước đây P1-T10)_
-- [ ] **P1-T13** OpenAPI `com/tm/server/api/core.openapi.yaml` cho các endpoint trên _(trước đây P1-T11)_
+- [ ] **P1-T08** Module `internal/catalog` theo vertical slice (types, hàm thuần, service, store, http); `internal/httpx`; theo [project-structure](../../project-structure.md#module-trong-core-modular-monolith) `[G11]` _(trước đây P1-T06)_
+- [ ] **P1-T09** Wiring thủ công trong `cmd/server/main.go` `[G12]` _(trước đây P1-T06a)_
+- [ ] **P1-T10** Kiểm tra ranh giới module tự động (Bazel visibility hoặc test import) theo [ADR-0001](../../adr/0001-modular-monolith-core.md) `[G11]` _(trước đây P1-T06b)_
+- [ ] **P1-T11** Domain error + mapping sang HTTP/`error.code` `[G7]` _(trước đây P1-T07)_
+- [ ] **P1-T12** Truyền `context.Context` từ handler → use case → repository, đặt timeout per-request `[G2]` _(trước đây P1-T08)_
+- [ ] **P1-T13** API `GET /internal/v1/trips/search`, `/trips/{id}`, `/trips/{id}/seats` _(trước đây P1-T09)_
+- [ ] **P1-T14** Tính giá thấp nhất theo đoạn và hạng ghế từ `fares` hợp lệ tại thời điểm hiện tại _(trước đây P1-T10)_
+- [ ] **P1-T15** OpenAPI `com/tm/server/api/core.openapi.yaml` cho các endpoint trên _(trước đây P1-T11)_
 
 ### qa
-- [ ] **P1-T14** Unit test domain (tính giờ đến, chọn giá) _(trước đây P1-T12)_
-- [ ] **P1-T15** Integration test repository với testcontainers _(trước đây P1-T13)_
-- [ ] **P1-T16** Benchmark query search trên dữ liệu seed _(trước đây P1-T14)_
+- [ ] **P1-T16** Unit test domain (tính giờ đến, chọn giá) _(trước đây P1-T12)_
+- [ ] **P1-T17** Integration test repository với testcontainers _(trước đây P1-T13)_
+- [ ] **P1-T18** Benchmark query search trên dữ liệu seed _(trước đây P1-T14)_
 
 ## Challenge
 

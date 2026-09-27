@@ -19,3 +19,4 @@
 | P6-AT13 | Integration | Rebuild aggregate khi dashboard đang dùng | Dashboard vẫn trả số liệu cũ cho đến khi swap; sau swap là số mới | P6-FR3, A6 | ⬜ |
 | P6-AT14 | Integration | Detach partition `outbox_events` tháng cũ | Hoàn tất tức thì, không khoá bảng chính | P6-NFR3, P8 | ⬜ |
 | P6-AT15 | Integration | Insert vào tháng chưa có partition | Job tạo trước partition nên không lỗi | P8 | ⬜ |
+| P6-AT16 | Integration | Request core có `traceparent` | Tempo có trace với span core + PG; log có `trace_id` đúng | P6-NFR4 | ⬜ |

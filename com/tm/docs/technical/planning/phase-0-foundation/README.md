@@ -1,161 +1,77 @@
-# Phase 0 — Nền móng
+# Phase 0 — Nền móng (tối giản cho chặng A)
+
+> Chỉ dựng những gì chặng A (Go + PostgreSQL) cần. MongoDB, Redis, BFF, observability đầy đủ được thêm ở phase dùng tới chúng.
 
 ## Mục tiêu
 
-Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase sau chỉ tập trung vào nghiệp vụ.
+Có repo, Bazel + Go, PostgreSQL local, migration, một core service "rỗng" chạy được (health, log, dừng êm, image), CI cho Go.
 
-**Mốc demo**: `docker compose up` chạy đủ PostgreSQL, MongoDB, Redis, Grafana; service Go và Fastify "hello world" có health check, log JSON, trace hiển thị trên Grafana; CI xanh.
+**Mốc demo**: `make up && make migrate` → `go run` core → `curl /readyz` trả 200; CI xanh.
+
+## Kiến thức trọng tâm
+
+Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: chạy bằng Docker, migration với goose · Công cụ: Bazel + Gazelle, Docker Compose, Makefile, GitHub Actions
 
 ## Phạm vi
 
-- **Trong**: cấu trúc repo, Docker Compose, migration tool, CI, lint/format, skeleton service, logging/tracing/metrics.
-- **Ngoài**: mọi logic nghiệp vụ.
-
-> Các task Node/React còn lại của Phase 0 (OTel Node, dừng êm Fastify, skeleton web, config TS, Vitest) đã chuyển sang Phase 7 và Phase 9 để mỗi chặng chỉ học một công nghệ.
+- **Trong**: cấu trúc repo, Docker Compose (chỉ PG core), goose, Bazel + Go, skeleton core, graceful shutdown, image OCI, testcontainers-go, Makefile, CI Go.
+- **Ngoài**: logic nghiệp vụ; MongoDB, Redis, BFF, web (chặng B, C); OpenTelemetry/Grafana (Phase 6); PG analytics (Phase 6).
 
 ## Workstream
 
-`infra` · `core` · `bff` · `qa`
+`infra` · `db` · `core` · `qa`
 
 ## Requirement
 
 | ID | Loại | Mô tả |
 |---|---|---|
-| P0-FR1 | FR | Một lệnh khởi động toàn bộ hạ tầng local |
-| P0-FR2 | FR | Migration chạy được cho PG core và PG analytics |
-| P0-FR3 | FR | `core` và `bff` có `/healthz` (sống) và `/readyz` (kết nối được DB) |
-| P0-FR4 | FR | CI chạy lint, build, test cho Go và TS trên mỗi PR |
-| P0-NFR1 | NFR | Log dạng JSON, có `trace_id`, `request_id` |
-| P0-NFR2 | NFR | Trace truyền qua `traceparent` (W3C) — core nhận và nối trace; phía bff kiểm chứng ở Phase 7 |
-| P0-NFR3 | NFR | Service dừng an toàn khi nhận SIGTERM, không cắt ngang request |
+| P0-FR1 | FR | Một lệnh khởi động hạ tầng local (PG core) |
+| P0-FR2 | FR | Migration chạy được cho PG core |
+| P0-FR3 | FR | `core` có `/healthz` (sống) và `/readyz` (kết nối được DB) |
+| P0-FR4 | FR | CI chạy lint, build, test Go trên mỗi PR |
+| P0-NFR1 | NFR | Log dạng JSON một dòng |
+| P0-NFR2 | NFR | Service dừng an toàn khi nhận SIGTERM, không cắt ngang request |
 
 ## Task
 
 ### infra
-- [x] **P0-T01** Khởi tạo cấu trúc `com/tm/{server,app,docs}`, `deploy/`, `loadtest/` theo [project-structure](../../project-structure.md)
-  - [x] 1. Test case: P0-T01-TC01, P0-T01-TC02, P0-T01-TC03 — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(infra): scaffold monorepo directories and repo checks [P0-T01]` · Push: có
-- [x] **P0-T01a** `com/tm/server`: `MODULE.bazel` (rules_go, gazelle, rules_oci), `.bazelversion`, `.bazelrc`, một `go.mod`, target `//:gazelle` với `gazelle:prefix` và `go_naming_convention import`; macro `com_tm_go_image` (`tools/rules`) build binary + OCI image distroless, gazelle `map_kind` cho `go_binary` (theo repo thor) `[G14]`
-  - [x] 1. Test case: P0-T01a-TC01..TC07 — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `build(server): bazel + go module + com_tm_go_image OCI macro [P0-T01a][G14]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T01b** `com/tm/app`: `pnpm-workspace.yaml`, `package.json` gốc, script `dev`/`build`/`test` chạy theo filter
-  - [x] 1. Test case: P0-T01b-TC01..TC04 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `build(app): pnpm workspace for com/tm/app [P0-T01b]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T02** `deploy/docker-compose.yml`: PG core (5432), PG analytics (5433), MongoDB, Redis, otel-collector, Prometheus, Grafana, Tempo/Jaeger
-  - [x] 1. Test case: P0-T02-TC01..TC05 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `build(deploy): docker-compose for local infra and observability [P0-T02]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T03** Cấu hình goose, thư mục `com/tm/server/db/core/migrations`, `com/tm/server/db/analytics/migrations`, migration rỗng đầu tiên
-  - [x] 1. Test case: P0-T03-TC01..TC05 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `build(db): goose migrations for core and analytics [P0-T03]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T04** GitHub Actions chạy theo đường dẫn thay đổi: `com/tm/server/**` → `golangci-lint` + `bazel test` target bị ảnh hưởng; `com/tm/app/**` → `pnpm --filter "...[origin/main]" lint test build` `[G14]`
-  - [x] 1. Test case: P0-T04-TC01..TC05 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `ci: path-filtered GitHub Actions with affected bazel tests [P0-T04][G14]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T05** Makefile / script: `make up`, `make migrate`, `make test`
-  - [x] 1. Test case: P0-T05-TC01..TC05 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `build: Makefile for infra, migrations and CI checks [P0-T05]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T06** Dashboard Grafana cơ bản: RED metrics cho mỗi service
-  - [x] 1. Test case: P0-T06-TC01..TC04 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(observability): provisioned Grafana RED dashboard [P0-T06]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
+- [ ] **P0-T01** Cấu trúc thư mục `com/tm/server`, `.gitignore` cho Go/Bazel
+- [ ] **P0-T02** `deploy/docker-compose.yml` chỉ có PostgreSQL core (5432), healthcheck, volume
+
+### db
+- [ ] **P0-T03** goose migration cho PG core: `scripts/migrate.sh`, migration rỗng đầu tiên
 
 ### core
-- [x] **P0-T07** Skeleton `com/tm/server/services/core`: config (env), slog JSON, chi router, pgxpool, `/healthz`, `/readyz`, `/metrics`
-  - [x] 1. Test case: P0-T07-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(core): service skeleton with config, slog JSON, chi, pgxpool, health and metrics [P0-T07]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T08** Middleware: request ID, recover, access log, OTel HTTP
-  - [x] 1. Test case: P0-T08-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(core): request ID, recover, access log and OTel HTTP middleware [P0-T08]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T09** Graceful shutdown: bắt SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
-  - [x] 1. Test case: P0-T09-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(core): graceful shutdown on SIGTERM/SIGINT [P0-T09][G3]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T10** Tích hợp OpenTelemetry SDK trong `pkg/otelx`, export OTLP `[G10]`
-  - [x] 1. Test case: P0-T10-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(otel): OpenTelemetry SDK with OTLP export and pgx tracing [P0-T10][G10]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [x] **P0-T10a** Image OCI cho core: dùng macro `com_tm_go_image` (có từ P0-T01a) cho `cmd/server`, `cmd/worker` `[G14]`
-  - [x] 1. Test case: P0-T10a-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `build(core): OCI images for core server and worker [P0-T10a][G14]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-
-### bff
-- [x] **P0-T11** Skeleton `com/tm/app/apps/bff` Fastify + TS (ESM, strict, `tsx` khi dev, `tsup` khi build): plugin config, logger pino JSON, `/healthz`, `/readyz`
-  - [x] 1. Test case: P0-T11-TC01..TC06 (tự duyệt theo chỉ đạo người dùng — P0 chưa có logic) — đã được duyệt
-  - [x] 2. Code
-  - [x] 3. Unit test
-  - [x] 4. Build + unit test pass
-  - [x] 5. Test case pass + handbook
-  - [x] 6. Commit: `feat(bff): Fastify + TypeScript skeleton with config, pino JSON, health [P0-T11]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
+- [ ] **P0-T04** Bazel + Gazelle + một `go.mod` cho `com/tm/server` `[G14]`
+- [ ] **P0-T05** Skeleton core: hello world → HTTP server → chi router + `/healthz` → config từ env → log `slog` JSON → pgxpool + `/readyz`
+- [ ] **P0-T06** Graceful shutdown: SIGTERM, `http.Server.Shutdown` có timeout, đóng pool sau cùng `[G3]`
+- [ ] **P0-T07** Image OCI cho core bằng macro `com_tm_go_image` (rules_oci, distroless, non-root) `[G14]`
 
 ### qa
-- [ ] **P0-T12** Khung testcontainers-go cho integration test với PG
+- [ ] **P0-T08** Khung testcontainers-go cho integration test với PG
+
+### infra
+- [ ] **P0-T09** Makefile: `up`, `down`, `migrate`, `test`, `gazelle`
+- [ ] **P0-T10** GitHub Actions cho Go: gazelle diff, golangci-lint, `bazel test` target bị ảnh hưởng `[G14]`
 
 ## Challenge
 
 | # | Công nghệ | Challenge | Bối cảnh | Hướng giải | Hoàn thành khi | Trạng thái |
 |---|---|---|---|---|---|---|
-| G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | 🟨 |
-| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng | 🟨 |
+| G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | ⬜ |
+| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng; core build được thành image | ⬜ |
 
 ## Definition of Done
 
 - [ ] Clone repo mới → `make up && make migrate` chạy thành công trong < 5 phút
-- [ ] CI xanh trên nhánh `main`; sửa một file trong `com/tm/app` không kích hoạt `bazel test` và ngược lại
-- [ ] `go test ./...` và `bazel test //...` trong `com/tm/server` đều pass
+- [ ] Core chạy được bằng `go run` và bằng image Docker; `/readyz` phản ánh đúng trạng thái PG
 - [ ] Gửi SIGTERM khi đang có request chậm → request hoàn thành, service thoát sạch
+- [ ] CI xanh trên `main`
 - [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 
 - [ ] Cập nhật [local-setup](../../local-setup.md) theo thực tế
-- [ ] ADR: Bazel cho Go + pnpm cho TS; lựa chọn công cụ migration, tracing backend
+- [ ] ADR: Bazel cho Go + pnpm cho TS; công cụ migration
 - [ ] Viết [lessons-learned.md](lessons-learned.md)
 - [ ] Cập nhật trạng thái phase trong [planning](../README.md)

@@ -24,8 +24,8 @@ python3 .claude/scripts/planning.py step $ARGUMENTS
 | Bước tiếp theo | Làm gì | Dừng ở đâu |
 |---|---|---|
 | **0** | Xem kết quả validate trong output. Có ❌ → **dừng**, báo điều kiện chưa đạt và cách khắc phục. Đạt hết → thêm checklist con dưới dòng task, phase ⬜ → 🟨 nếu cần, rồi sang bước 1 | Chỉ dừng nếu validate fail |
-| **1** | Chưa có file test case → tạo `tasks/<Task ID>/test-cases.md` theo CLAUDE.md, trình bày, **DỪNG chờ duyệt**. Đã có file → nếu tin nhắn hiện tại của người dùng **duyệt rõ ràng** (vd "duyệt", "ok test case", "approve") thì đánh `[x]` bước 1 và làm tiếp bước 2; nếu yêu cầu sửa thì sửa rồi trình bày lại; nếu chưa có ý kiến thì trình bày lại bộ test case và hỏi duyệt | **Luôn dừng** cho đến khi người dùng duyệt |
-| **2** | Code trong phạm vi task | Không dừng |
+| **1** | Chưa có file test case → tạo `tasks/<Task ID>/test-cases.md` (test case + kế hoạch subtask) theo CLAUDE.md, trình bày, **DỪNG chờ duyệt**. Đã có file → nếu tin nhắn hiện tại của người dùng **duyệt rõ ràng** (vd "duyệt", "ok test case", "approve") thì đánh `[x]` bước 1 và làm tiếp bước 2; nếu yêu cầu sửa thì sửa rồi trình bày lại; nếu chưa có ý kiến thì trình bày lại bộ test case và hỏi duyệt | **Luôn dừng** cho đến khi người dùng duyệt |
+| **2** | Làm **subtask chưa `[x]` đầu tiên** dưới bước 2: code, chạy thử, trình bày + giải thích, **DỪNG**. Nếu tin nhắn hiện tại xác nhận subtask đang chờ → đánh `[x]` subtask đó rồi làm subtask kế. Hết subtask → `[x]` bước 2, sang bước 3 | **Dừng sau mỗi subtask** |
 | **3** | Viết unit test | Không dừng |
 | **4** | Build + chạy toàn bộ unit test, lint. Fail → sửa code, chạy lại | Dừng và báo nếu không tự sửa được |
 | **5** | Chạy từng test case của task, đánh ✅; ghi handbook; cập nhật challenge, acceptance tests liên quan, docs; đánh `[x]` dòng task | Dừng và báo nếu test case fail mà không sửa được |
@@ -39,7 +39,7 @@ Khi bước 6 đã `[x]` (đã commit): báo ngắn task vừa xong, rồi chạ
 
 ## Không được
 
-- Bỏ qua điểm dừng ở bước 1 (duyệt test case) và bước 6 (commit/push).
+- Bỏ qua điểm dừng ở bước 1 (duyệt test case), sau mỗi subtask của bước 2, và bước 6 (commit/push).
 - Coi sự im lặng hoặc câu mơ hồ là đồng ý.
 - Lách hook `snaptix guard` bằng Bash để sửa code — hook chặn nghĩa là quy trình chưa đúng.
 - Làm nhiều task trong một lần gọi.

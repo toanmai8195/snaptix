@@ -4,17 +4,14 @@
 
 | ID | Loại | Kịch bản | Kết quả mong đợi | Requirement / Challenge | Trạng thái |
 |---|---|---|---|---|---|
-| P0-AT01 | Manual | Máy sạch, clone repo, chạy `make up && make migrate` | Tất cả container healthy, migration áp dụng thành công | P0-FR1, P0-FR2 | ✅ |
-| P0-AT02 | Integration | Gọi `core /readyz` khi PG đang chạy | 200 | P0-FR3 | ✅ |
-| P0-AT03 | Integration | Dừng PG, gọi `core /readyz` | 503; `/healthz` vẫn 200 | P0-FR3 | ✅ |
+| P0-AT01 | Manual | Máy sạch, clone repo, chạy `make up && make migrate` | PG healthy, migration áp dụng, xong trong < 5 phút | P0-FR1, P0-FR2 | ⬜ |
+| P0-AT02 | Integration | Gọi `core /readyz` khi PG đang chạy | 200 | P0-FR3 | ⬜ |
+| P0-AT03 | Integration | Dừng PG, gọi `core /readyz` | 503; `/healthz` vẫn 200 | P0-FR3 | ⬜ |
 | P0-AT04 | CI | Mở PR có lỗi lint Go | CI fail ở bước lint | P0-FR4 | ⬜ |
-| P0-AT05 | CI | Mở PR có test TS fail | CI fail ở bước test | P0-FR4 | ⬜ |
-| P0-AT06 | Manual | Gọi 1 request bất kỳ, xem log core | Log JSON có `trace_id`, `request_id`, `status`, `latency_ms` | P0-NFR1 | ✅ |
-| P0-AT07 | Integration | Gửi request có handler sleep 3s, gửi SIGTERM sau 1s | Request trả 200, process thoát code 0 | P0-NFR3, G3 | ✅ |
-| P0-AT08 | Integration | Gửi SIGTERM rồi gửi request mới | Request mới bị từ chối (connection refused / 503) | P0-NFR3, G3 | ✅ |
-| P0-AT09 | Integration | Handler chạy quá shutdown timeout | Service vẫn thoát sau timeout, log cảnh báo | G3 | ✅ |
-| P0-AT10 | CI | PR chỉ sửa `com/tm/app/**` | Không chạy job Bazel | G14 | ⬜ |
-| P0-AT11 | Manual | Thêm package Go mới, chạy `bazel run //:gazelle` | BUILD.bazel sinh đúng; `go build ./...` và `bazel build //...` đều pass | G14 | ✅ |
-| P0-AT12 | Integration | Package ở `services/stats-worker` import `services/core/internal/...` | Build fail (visibility / `internal`) | G14 | ⬜ |
-
-> P0-AT07..AT09 kiểm chứng ở P0-T09 bằng `http.Server` thật qua TCP (unit test `TestServe_*`) vì core chưa có endpoint chậm; tín hiệu SIGTERM/SIGINT trên binary kiểm bằng `scripts/test/core-shutdown.test.sh`.
+| P0-AT05 | CI | PR chỉ sửa `com/tm/docs/**` | Không chạy job Go | G14 | ⬜ |
+| P0-AT06 | Manual | Gọi 1 request, xem log core | Mỗi dòng log là JSON có `time`, `level`, `msg` | P0-NFR1 | ⬜ |
+| P0-AT07 | Integration | Request có handler chậm 3s, gửi SIGTERM sau 1s | Request trả 200, process thoát mã 0 | P0-NFR2, G3 | ⬜ |
+| P0-AT08 | Integration | Gửi SIGTERM rồi gửi request mới | Request mới bị từ chối | P0-NFR2, G3 | ⬜ |
+| P0-AT09 | Integration | Handler chạy quá shutdown timeout | Service vẫn thoát sau timeout, log cảnh báo | G3 | ⬜ |
+| P0-AT10 | Manual | Thêm package Go mới, chạy gazelle | Build/test pass bằng cả `go` và Bazel | G14 | ⬜ |
+| P0-AT11 | Integration | Chạy image core bằng Docker, `docker stop` | `/healthz` 200 trong container; thoát mã 0 | G14 | ⬜ |

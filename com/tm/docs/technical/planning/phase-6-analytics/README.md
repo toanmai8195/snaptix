@@ -31,25 +31,34 @@ Go: worker at-least-once, idempotent consumer · PG: star schema, partition, BRI
 | P6-NFR1 | NFR | Độ trễ từ lúc đặt vé đến dashboard < 5 phút |
 | P6-NFR2 | NFR | Báo cáo 1 năm < 2s trên 100 triệu dòng fact |
 | P6-NFR3 | NFR | Xoá dữ liệu cũ bằng detach partition, không `DELETE` hàng loạt |
+| P6-NFR4 | NFR | Log có `trace_id`; trace request core hiển thị trên Grafana kèm span PG |
 
 ## Task
 
+### infra / db (chuyển từ Phase 0)
+- [ ] **P6-T01** Thêm PostgreSQL analytics (5433) vào compose; `scripts/migrate.sh analytics`, migration đầu tiên
+
 ### core / db
-- [ ] **P6-T01** Outbox relay trong `core worker`: đọc `FOR UPDATE SKIP LOCKED` theo batch, đánh dấu `published_at` (tái sử dụng pattern G4) _(trước đây P6-T01)_
-- [ ] **P6-T02** Partition theo tháng cho `ledger_entries`, `outbox_events`; job tạo partition trước và detach partition cũ `[P8]` _(trước đây P6-T02)_
+- [ ] **P6-T02** Outbox relay trong `core worker`: đọc `FOR UPDATE SKIP LOCKED` theo batch, đánh dấu `published_at` (tái sử dụng pattern G4) _(trước đây P6-T01)_
+- [ ] **P6-T03** Partition theo tháng cho `ledger_entries`, `outbox_events`; job tạo partition trước và detach partition cũ `[P8]` _(trước đây P6-T02)_
 
 ### analytics
-- [ ] **P6-T03** Thiết kế star schema: `dim_date`, `dim_route`, `dim_trip`, `fact_bookings`, `fact_cancellations`, `fact_topups`; xác định grain `[A1]` _(trước đây P6-T03)_
-- [ ] **P6-T04** `processed_events` + ghi fact trong cùng transaction `[A2]` _(trước đây P6-T04)_
-- [ ] **P6-T05** Upsert `agg_revenue_hourly`, `agg_trip_occupancy` theo sự kiện; job rollup `agg_revenue_daily` `[A3]` _(trước đây P6-T05)_
-- [ ] **P6-T06** Partition fact theo tháng, BRIN index cột thời gian `[A4]` _(trước đây P6-T06)_
-- [ ] **P6-T07** Truy vấn báo cáo: window function, CTE, `GROUPING SETS`; `mv_top_routes_30d` refresh concurrently `[A5]` _(trước đây P6-T07)_
-- [ ] **P6-T08** Lệnh rebuild aggregate vào bảng mới rồi swap (versioning) `[A6]` _(trước đây P6-T08)_
-- [ ] **P6-T09** Seed 100 triệu dòng fact để đo hiệu năng _(trước đây P6-T09)_
+- [ ] **P6-T04** Thiết kế star schema: `dim_date`, `dim_route`, `dim_trip`, `fact_bookings`, `fact_cancellations`, `fact_topups`; xác định grain `[A1]` _(trước đây P6-T03)_
+- [ ] **P6-T05** `processed_events` + ghi fact trong cùng transaction `[A2]` _(trước đây P6-T04)_
+- [ ] **P6-T06** Upsert `agg_revenue_hourly`, `agg_trip_occupancy` theo sự kiện; job rollup `agg_revenue_daily` `[A3]` _(trước đây P6-T05)_
+- [ ] **P6-T07** Partition fact theo tháng, BRIN index cột thời gian `[A4]` _(trước đây P6-T06)_
+- [ ] **P6-T08** Truy vấn báo cáo: window function, CTE, `GROUPING SETS`; `mv_top_routes_30d` refresh concurrently `[A5]` _(trước đây P6-T07)_
+- [ ] **P6-T09** Lệnh rebuild aggregate vào bảng mới rồi swap (versioning) `[A6]` _(trước đây P6-T08)_
+- [ ] **P6-T10** Seed 100 triệu dòng fact để đo hiệu năng _(trước đây P6-T09)_
 
 ### qa
-- [ ] **P6-T10** Test replay toàn bộ outbox 2 lần → số liệu không đổi _(trước đây P6-T12)_
-- [ ] **P6-T11** Đối chiếu tổng doanh thu analytics với tổng ledger `REVENUE` ở core _(trước đây P6-T13)_
+- [ ] **P6-T11** Test replay toàn bộ outbox 2 lần → số liệu không đổi _(trước đây P6-T12)_
+- [ ] **P6-T12** Đối chiếu tổng doanh thu analytics với tổng ledger `REVENUE` ở core _(trước đây P6-T13)_
+
+### observability cho core (chuyển từ Phase 0)
+- [ ] **P6-T13** Thêm otel-collector, Tempo, Prometheus, Grafana vào compose (profile `observability`), datasource provision sẵn
+- [ ] **P6-T14** OpenTelemetry SDK trong `pkg/otelx` (OTLP HTTP), otelhttp middleware, trace truy vấn PG khi có span cha; log có `trace_id`
+- [ ] **P6-T15** Dashboard Grafana RED provision từ file
 
 ## Challenge
 

@@ -35,32 +35,35 @@ Go: pprof, GC · PG: PgBouncer, replica, autovacuum · Node: event loop lag, hea
 
 ## Task
 
+### infra (chuyển từ Phase 0)
+- [ ] **P11-T01** Thêm Redis vào compose (healthcheck, AOF)
+
 ### qa
-- [ ] **P11-T01** Bộ kịch bản k6: search, booking thường, mở bán Tết, soak 24h; dashboard Grafana cho k6 _(trước đây P7-T01)_
-- [ ] **P11-T02** Đo baseline, lưu `loadtest/results/phase-11/baseline` _(trước đây P7-T02)_
+- [ ] **P11-T02** Bộ kịch bản k6: search, booking thường, mở bán Tết, soak 24h; dashboard Grafana cho k6 _(trước đây P7-T01)_
+- [ ] **P11-T03** Đo baseline, lưu `loadtest/results/phase-11/baseline` _(trước đây P7-T02)_
 
 ### core
-- [ ] **P11-T03** pprof CPU/heap/mutex/block dưới tải, tối ưu điểm nóng, ghi trước/sau `[G8]` _(trước đây P7-T03)_
-- [ ] **P11-T04** Đặt giới hạn CPU/RAM cho container core; cấu hình `GOMAXPROCS`, `GOMEMLIMIT`; đọc `GODEBUG=gctrace=1` `[G13]` _(trước đây P7-T03a)_
-- [ ] **P11-T05** Tách pool đọc (replica) / ghi (primary); định tuyến đọc-sau-ghi về primary `[P11]` _(trước đây P7-T04)_
-- [ ] **P11-T06** Redis pre-check trạng thái ghế, đồng bộ từ sự kiện; fallback về PG khi Redis lỗi `[D1][D3]` _(trước đây P7-T05)_
-- [ ] **P11-T07** Waiting room: sorted set cấp token theo tốc độ, endpoint kiểm tra vị trí `[D2]` _(trước đây P7-T06)_
+- [ ] **P11-T04** pprof CPU/heap/mutex/block dưới tải, tối ưu điểm nóng, ghi trước/sau `[G8]` _(trước đây P7-T03)_
+- [ ] **P11-T05** Đặt giới hạn CPU/RAM cho container core; cấu hình `GOMAXPROCS`, `GOMEMLIMIT`; đọc `GODEBUG=gctrace=1` `[G13]` _(trước đây P7-T03a)_
+- [ ] **P11-T06** Tách pool đọc (replica) / ghi (primary); định tuyến đọc-sau-ghi về primary `[P11]` _(trước đây P7-T04)_
+- [ ] **P11-T07** Redis pre-check trạng thái ghế, đồng bộ từ sự kiện; fallback về PG khi Redis lỗi `[D1][D3]` _(trước đây P7-T05)_
+- [ ] **P11-T08** Waiting room: sorted set cấp token theo tốc độ, endpoint kiểm tra vị trí `[D2]` _(trước đây P7-T06)_
 
 ### db
-- [ ] **P11-T08** PgBouncer transaction mode; tính kích thước pool tối ưu; kiểm tra tương thích prepared statement của pgx `[P9]` _(trước đây P7-T07)_
-- [ ] **P11-T09** Streaming replication primary → replica trong Docker Compose; đo replication lag `[P11]` _(trước đây P7-T08)_
-- [ ] **P11-T10** Tuning autovacuum, fillfactor cho `trip_seats`, `seat_holds`; theo dõi dead tuples `[P12]` _(trước đây P7-T09)_
-- [ ] **P11-T11** Tuning `shared_buffers`, `work_mem`, `max_connections` và ghi lý do _(trước đây P7-T10)_
+- [ ] **P11-T09** PgBouncer transaction mode; tính kích thước pool tối ưu; kiểm tra tương thích prepared statement của pgx `[P9]` _(trước đây P7-T07)_
+- [ ] **P11-T10** Streaming replication primary → replica trong Docker Compose; đo replication lag `[P11]` _(trước đây P7-T08)_
+- [ ] **P11-T11** Tuning autovacuum, fillfactor cho `trip_seats`, `seat_holds`; theo dõi dead tuples `[P12]` _(trước đây P7-T09)_
+- [ ] **P11-T12** Tuning `shared_buffers`, `work_mem`, `max_connections` và ghi lý do _(trước đây P7-T10)_
 
 ### bff
-- [ ] **P11-T12** Đo event loop lag, chuyển xử lý nặng (xuất CSV, format lớn) khỏi main thread `[N1]` _(trước đây P7-T11)_
-- [ ] **P11-T13** Rate limit sliding window trên Redis `[N5]` _(trước đây P7-T12)_
-- [ ] **P11-T14** Cache tìm chuyến: TTL ngắn + stale-while-revalidate + single-flight chống stampede `[N7]` _(trước đây P7-T13)_
-- [ ] **P11-T15** Heap snapshot trước/sau soak test `[N9]` _(trước đây P7-T14)_
+- [ ] **P11-T13** Đo event loop lag, chuyển xử lý nặng (xuất CSV, format lớn) khỏi main thread `[N1]` _(trước đây P7-T11)_
+- [ ] **P11-T14** Rate limit sliding window trên Redis `[N5]` _(trước đây P7-T12)_
+- [ ] **P11-T15** Cache tìm chuyến: TTL ngắn + stale-while-revalidate + single-flight chống stampede `[N7]` _(trước đây P7-T13)_
+- [ ] **P11-T16** Heap snapshot trước/sau soak test `[N9]` _(trước đây P7-T14)_
 
 ### infra
-- [ ] **P11-T16** Chạy nhiều instance core, bff sau load balancer (nginx/traefik) trong Compose _(trước đây P7-T15)_
-- [ ] **P11-T17** Kịch bản chaos: kill Redis, kill 1 instance core, làm chậm PG (toxiproxy) _(trước đây P7-T16)_
+- [ ] **P11-T17** Chạy nhiều instance core, bff sau load balancer (nginx/traefik) trong Compose _(trước đây P7-T15)_
+- [ ] **P11-T18** Kịch bản chaos: kill Redis, kill 1 instance core, làm chậm PG (toxiproxy) _(trước đây P7-T16)_
 
 ## Challenge
 

@@ -21,6 +21,7 @@ HANDBOOK = ROOT / "com/tm/docs/technical/handbook"
 
 TASK_RE = re.compile(r"^- \[( |x)\] \*\*(P\d+-T\d+[a-z]?)\*\* (.*)$")
 STEP_RE = re.compile(r"^\s+- \[( |x)\] (\d)\. (.*)$")
+SUB_RE = re.compile(r"^\s+- \[( |x)\] 2\.(\d+) (.*)$")
 CHK_RE = re.compile(r"^- \[( |x)\] (.*)$")
 CH_TAG_RE = re.compile(r"\[([GPANMRDS]\d+)(?: [^\]]*)?\]")
 TC_ID_RE = re.compile(r"P\d+-T\d+[a-z]?-TC\d+")
@@ -76,8 +77,10 @@ def load_phase(d: Path, status):
             ws = line[4:].strip()
         elif m := TASK_RE.match(line):
             cur = {"id": m.group(2), "done": m.group(1) == "x", "desc": m.group(3), "ws": ws,
-                   "phase": n, "steps": [], "challenges": CH_TAG_RE.findall(m.group(3))}
+                   "phase": n, "steps": [], "subtasks": [], "challenges": CH_TAG_RE.findall(m.group(3))}
             tasks.append(cur)
+        elif (m := SUB_RE.match(line)) and cur:
+            cur["subtasks"].append({"n": int(m.group(2)), "done": m.group(1) == "x", "text": m.group(3)})
         elif (m := STEP_RE.match(line)) and cur:
             cur["steps"].append({"n": int(m.group(2)), "done": m.group(1) == "x", "text": m.group(3)})
 
@@ -421,10 +424,16 @@ def cmd_step(arg):
         print("VALIDATE BƯỚC 0:")
         for ok, text in validate(phases, tasks, idx):
             print(f"- {'✅' if ok else '❌'} {text}")
+    if step == 2:
+        nxt = next((x for x in t["subtasks"] if not x["done"]), None)
+        print(f"SUBTASK TIẾP THEO: 2.{nxt['n']} — {nxt['text']}" if nxt else "SUBTASK: đã xong hết (hoặc chưa ghi) — đánh [x] bước 2")
     if t["steps"]:
         print("CHECKLIST CON:")
         for st in t["steps"]:
             print(f"- [{'x' if st['done'] else ' '}] {st['n']}. {st['text']}")
+            if st["n"] == 2:
+                for x in t["subtasks"]:
+                    print(f"    - [{'x' if x['done'] else ' '}] 2.{x['n']} {x['text']}")
 
 
 def _task_file(task_id):
@@ -442,6 +451,8 @@ def cmd_mark(argv):
     mark start <ID> <mô tả test case>      thêm checklist con 6 bước (bước 0)
     mark step <ID> <n> [ghi chú bước 6]    tick bước n; n=5 tick cả dòng task
     mark tc <ID>                           đánh ✅ mọi test case của task
+    mark subs <ID> "<subtask 1>" "<subtask 2>" ...   ghi checklist 2.1, 2.2... dưới bước 2
+    mark sub <ID> <k>                      tick subtask 2.<k>
     """
     if len(argv) < 2:
         sys.exit(cmd_mark.__doc__)
@@ -477,6 +488,21 @@ def cmd_mark(argv):
         text = text[:m.end()] + seg + text[seg_end:]
         if n == 5:
             text = line_re.sub(lambda mm: mm.group(0).replace("- [ ]", "- [x]", 1), text, count=1)
+    elif action == "subs":
+        subs = argv[2:]
+        seg_end = text.find("\n- [", m.end()); seg_end = len(text) if seg_end == -1 else seg_end
+        seg = text[m.end():seg_end]
+        block = "".join(f"\n    - [ ] 2.{i} {x}" for i, x in enumerate(subs, 1))
+        seg = re.sub(r"(\n  - \[[ x]\] 2\. [^\n]*)", lambda mm: mm.group(1) + block, seg, count=1)
+        text = text[:m.end()] + seg + text[seg_end:]
+    elif action == "sub":
+        k = argv[2]
+        seg_end = text.find("\n- [", m.end()); seg_end = len(text) if seg_end == -1 else seg_end
+        seg = text[m.end():seg_end]
+        new = re.sub(rf"^(\s+- )\[ \]( 2\.{k} )", r"\1[x]\2", seg, count=1, flags=re.M)
+        if new == seg:
+            sys.exit(f"Subtask 2.{k} của {tid} không có hoặc đã tick")
+        text = text[:m.end()] + new + text[seg_end:]
     elif action == "tc":
         f = pdir / "tasks" / tid / "test-cases.md"
         s2 = re.sub(rf"^(\| {re.escape(tid)}-TC\d+ \|.*)\| ⬜ \|$", r"\1| ✅ |", f.read_text(), flags=re.M)

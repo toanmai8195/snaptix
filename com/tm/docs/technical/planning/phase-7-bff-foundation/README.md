@@ -31,24 +31,30 @@ Node: event loop, async, Fastify plugin/hook, undici, stream · Mongo: document,
 | P7-FR4 | FR | API public tìm chuyến, chi tiết, sơ đồ ghế (gọi core) |
 | P7-NFR1 | NFR | Cookie session HttpOnly, Secure, SameSite=Lax; CSRF cho mọi request ghi |
 | P7-NFR2 | NFR | Core lỗi/chậm → BFF trả lỗi trong ≤ 2s, không treo |
+| P7-FR5 | FR | BFF có `/healthz` và `/readyz` (kết nối được MongoDB) |
 
 ## Task
 
+### infra (chuyển từ Phase 0)
+- [ ] **P7-T01** Thêm MongoDB vào compose; pnpm workspace `com/tm/app` (`pnpm-workspace.yaml`, script gốc)
+- [ ] **P7-T02** CI cho app: `pnpm install --frozen-lockfile`, lint/test/build theo package thay đổi
+- [ ] **P7-T03** Skeleton BFF Fastify + TypeScript (ESM, strict, tsx/tsup): config zod, log pino JSON, request ID, `/healthz`, `/readyz` (Mongo)
+
 ### bff
-- [ ] **P7-T01** OpenTelemetry cho Node (`node --import`); `bff /healthz?deep=1` gọi endpoint có trace của core (thêm `core GET /internal/v1/ping`) để kiểm tra trace bff → core → PG `[G10]` _(trước đây P0-T12)_
-- [ ] **P7-T02** Graceful shutdown Fastify: SIGTERM → `app.close()`, chờ request đang chạy, đóng MongoClient sau cùng _(trước đây P0-T13)_
-- [ ] **P7-T03** Plugin MongoDB, collection `users`, `sessions` với index + TTL `[M1][M2]` _(trước đây P2-T01)_
-- [ ] **P7-T04** Luồng OAuth Google (`@fastify/oauth2`), kiểm tra `state`, xác thực ID token `[N3]` _(trước đây P2-T02)_
-- [ ] **P7-T05** Session tự quản lý: tạo, xoay session id sau đăng nhập, hết hạn, đăng xuất `[N3]` _(trước đây P2-T03)_
-- [ ] **P7-T06** CSRF token (double submit hoặc synchronizer) cho POST/PUT/PATCH/DELETE `[N3]` _(trước đây P2-T04)_
-- [ ] **P7-T07** Core client (undici): keep-alive, timeout, retry có giới hạn cho request idempotent, circuit breaker `[N2]` _(trước đây P2-T05)_
-- [ ] **P7-T08** Đồng bộ user sang core idempotent + job đối soát user thiếu ví `[M3]` _(trước đây P2-T06)_
-- [ ] **P7-T09** Zod schema cho request/response; sinh type TS từ `core.openapi.yaml` `[N8]` _(trước đây P2-T07)_
-- [ ] **P7-T10** Route `/api/auth/*`, `/api/me`, `/api/stations`, `/api/trips*` _(trước đây P2-T08)_
-- [ ] **P7-T11** Error handler thống nhất định dạng lỗi _(trước đây P2-T09)_
+- [ ] **P7-T04** OpenTelemetry cho Node (`node --import`); `bff /healthz?deep=1` gọi endpoint có trace của core (thêm `core GET /internal/v1/ping`) để kiểm tra trace bff → core → PG `[G10]` _(trước đây P0-T12)_
+- [ ] **P7-T05** Graceful shutdown Fastify: SIGTERM → `app.close()`, chờ request đang chạy, đóng MongoClient sau cùng _(trước đây P0-T13)_
+- [ ] **P7-T06** Plugin MongoDB, collection `users`, `sessions` với index + TTL `[M1][M2]` _(trước đây P2-T01)_
+- [ ] **P7-T07** Luồng OAuth Google (`@fastify/oauth2`), kiểm tra `state`, xác thực ID token `[N3]` _(trước đây P2-T02)_
+- [ ] **P7-T08** Session tự quản lý: tạo, xoay session id sau đăng nhập, hết hạn, đăng xuất `[N3]` _(trước đây P2-T03)_
+- [ ] **P7-T09** CSRF token (double submit hoặc synchronizer) cho POST/PUT/PATCH/DELETE `[N3]` _(trước đây P2-T04)_
+- [ ] **P7-T10** Core client (undici): keep-alive, timeout, retry có giới hạn cho request idempotent, circuit breaker `[N2]` _(trước đây P2-T05)_
+- [ ] **P7-T11** Đồng bộ user sang core idempotent + job đối soát user thiếu ví `[M3]` _(trước đây P2-T06)_
+- [ ] **P7-T12** Zod schema cho request/response; sinh type TS từ `core.openapi.yaml` `[N8]` _(trước đây P2-T07)_
+- [ ] **P7-T13** Route `/api/auth/*`, `/api/me`, `/api/stations`, `/api/trips*` _(trước đây P2-T08)_
+- [ ] **P7-T14** Error handler thống nhất định dạng lỗi _(trước đây P2-T09)_
 
 ### qa
-- [ ] **P7-T12** Test BFF với core giả lập (mock server) cho timeout/lỗi _(trước đây P2-T17)_
+- [ ] **P7-T15** Test BFF với core giả lập (mock server) cho timeout/lỗi _(trước đây P2-T17)_
 
 ## Challenge
 

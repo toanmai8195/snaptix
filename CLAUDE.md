@@ -2,6 +2,8 @@
 
 Hệ thống đặt vé xe khách / tàu điện, dự án học tập để lên senior Go, PostgreSQL, Node.js, React.
 
+**Đây là dự án đầu tiên của người dùng với Go, PG, Node, Mongo, React — mục tiêu là làm đến đâu hiểu đến đó.** Ưu tiên bước nhỏ, giải thích rõ, dừng cho người dùng đọc code; không chạy nhanh nhiều task liền.
+
 | Thư mục | Nội dung | Build / test |
 |---|---|---|
 | `com/tm/server` | Go: core, stats-worker, `pkg/`, migration | `go test -race ./...`, `bazel run //:gazelle`, `bazel test //...` |
@@ -39,8 +41,10 @@ Chỉ bỏ qua điều kiện khi người dùng nói rõ cho phép, và ghi l�
 
 ```markdown
 - [ ] **P3-T05** <mô tả task>
-  - [ ] 1. Test case: P3-T05-TC01..TCnn — đã được duyệt
+  - [ ] 1. Test case: P3-T05-TC01..TCnn + kế hoạch subtask — đã được duyệt
   - [ ] 2. Code
+    - [ ] 2.1 <subtask nhỏ, vd service rỗng in hello world>
+    - [ ] 2.2 <subtask kế tiếp, vd thêm HTTP server>
   - [ ] 3. Unit test
   - [ ] 4. Build + unit test pass
   - [ ] 5. Test case pass + handbook
@@ -60,13 +64,23 @@ Chỉ bỏ qua điều kiện khi người dùng nói rõ cho phép, và ghi l�
 
 1. Tạo `tasks/<Task ID>/test-cases.md` (tiêu đề `# Test cases — <Task ID>: <tên task>`), bảng cột `ID | Loại | Kịch bản | Kết quả mong đợi | Trạng thái`, mỗi test case gồm: ID `<Task ID>-TCnn` (đánh số từ `TC01` trong task), loại, kịch bản, kết quả mong đợi, trạng thái ⬜. Test case phải kiểm chứng đúng phạm vi của task, không mượn ID của task hay phase khác.
 2. Nếu task góp phần làm pass test nghiệm thu (`P<N>-ATnn`) nào, nêu thêm dòng "Test nghiệm thu liên quan: ..." dưới bảng — để biết, không thay cho test case của task.
-3. Trình bày bộ test case cho người dùng và **DỪNG**.
-4. Chỉ sang bước 2 khi người dùng **duyệt rõ ràng**. Người dùng yêu cầu sửa → sửa rồi xin duyệt lại.
-5. Duyệt xong → đánh `[x]` bước 1, ghi dải ID test case.
+3. Viết **kế hoạch subtask** cho bước 2 vào `tasks/<Task ID>/test-cases.md` (mục `## Kế hoạch subtask`): chia code thành các bước nhỏ, mỗi bước chạy được và thêm **một** khái niệm mới (vd: service rỗng in hello world → thêm HTTP server → thêm router → thêm DAO → thêm handler → thêm service → cập nhật docker). Mỗi subtask ghi: làm gì, file nào, **kiến thức Go/PG/Node/React mới** và lý do chọn cách đó.
+4. Trình bày bộ test case + kế hoạch subtask cho người dùng và **DỪNG**.
+5. Chỉ sang bước 2 khi người dùng **duyệt rõ ràng**. Người dùng yêu cầu sửa → sửa rồi xin duyệt lại.
+6. Duyệt xong → đánh `[x]` bước 1, ghi dải ID test case, và chép các subtask thành checklist `2.1`, `2.2`... dưới bước 2.
 
 Test case đã duyệt là tiêu chí nghiệm thu của task: muốn thêm/sửa/xoá sau đó phải xin duyệt lại.
 
-### Bước 2 — Code
+### Bước 2 — Code, từng subtask một
+
+Với **mỗi** subtask theo thứ tự:
+1. Code đúng phạm vi subtask (nhỏ, chạy được).
+2. Chạy thử để chứng minh nó hoạt động (build, `go run`, `curl`...).
+3. Trình bày: file đã sửa, đoạn code chính, giải thích từng phần quan trọng, lệnh để người dùng tự chạy thử.
+4. **DỪNG** chờ người dùng đọc code và xác nhận (hoặc hỏi / yêu cầu sửa).
+5. Người dùng xác nhận → đánh `[x]` subtask đó, sang subtask tiếp theo.
+
+Đủ các subtask → đánh `[x]` bước 2.
 
 - Theo `project-structure.md`: package theo nghiệp vụ, interface phía dùng, wiring tay, không DI framework; Fastify plugin, không NestJS.
 - Chỉ làm trong phạm vi task. Việc ngoài phạm vi → ghi lại, báo người dùng, không tự làm.
@@ -126,7 +140,8 @@ Fail → sửa code (không sửa/skip test cho pass) → chạy lại đến kh
 ## Không được
 
 - Bỏ qua bước 0 hoặc làm task khi task trước chưa đủ checklist + commit mà người dùng chưa cho phép.
-- Code trước khi test case được duyệt.
+- Code trước khi test case + kế hoạch subtask được duyệt.
+- Làm tiếp subtask sau khi người dùng chưa xác nhận subtask trước; gộp nhiều subtask vào một lần.
 - Đánh `[x]` / ✅ khi chưa chạy hoặc còn test fail.
 - Sửa, xoá, `skip` test để cho pass; sửa test case đã duyệt mà không xin duyệt lại.
 - Commit hoặc push khi người dùng chưa đồng ý.
