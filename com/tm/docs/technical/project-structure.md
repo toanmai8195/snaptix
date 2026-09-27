@@ -247,5 +247,5 @@ Workflow `.github/workflows/ci.yml` chỉ gọi script trong `scripts/ci/` — c
 | ID | UUIDv7 (sắp xếp được theo thời gian) |
 | Commit | Conventional Commits, ghi ID task/challenge: `feat(core): ... [P4-T05][P1]` |
 | Migration | Chỉ thêm mới, không sửa migration đã merge |
-| Test Go | Table-driven; integration test với testcontainers |
+| Test Go | Table-driven; integration test với testcontainers qua `services/core/internal/pgtest` (`TestMain` → `pgtest.Run`, `pgtest.NewDB(t)` = DB riêng từ template đã migrate), đặt trong package riêng (vd `services/core/integration`) gắn tag Docker |
 | Test TS | Vitest; E2E với Playwright |

@@ -1,0 +1,15 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "migrations",
+    srcs = ["migrations.go"],
+    embedsrcs = ["00001_init.sql"],
+    importpath = "github.com/toanmai8195/snaptix/com/tm/server/db/core/migrations",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "migrations_test",
+    srcs = ["migrations_test.go"],
+    embed = [":migrations"],
+)

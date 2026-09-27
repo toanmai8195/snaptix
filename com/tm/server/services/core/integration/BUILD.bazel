@@ -1,0 +1,23 @@
+load("@rules_go//go:def.bzl", "go_test")
+
+# Integration test cần Docker (testcontainers): thêm tay size + tags, gazelle giữ nguyên.
+# Bỏ qua khi không có Docker: bazel test --test_tag_filters=-requires-docker //...
+go_test(
+    name = "integration_test",
+    size = "large",
+    srcs = [
+        "isolation_test.go",
+        "main_test.go",
+        "pg_test.go",
+        "readyz_test.go",
+    ],
+    tags = [
+        "requires-docker",
+        "requires-network",
+    ],
+    deps = [
+        "//services/core/internal/httpx",
+        "//services/core/internal/pgtest",
+        "@com_github_jackc_pgx_v5//pgconn",
+    ],
+)

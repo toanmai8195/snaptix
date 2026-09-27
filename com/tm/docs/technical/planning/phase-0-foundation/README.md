@@ -116,7 +116,17 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 6. Commit: `build(core): OCI image via com_tm_go_image macro (rules_oci, distroless, non-root) [P0-T07][G14]` · Push: có
 
 ### qa
-- [ ] **P0-T08** Khung testcontainers-go cho integration test với PG
+- [x] **P0-T08** Khung testcontainers-go cho integration test với PG
+  - [x] 1. Test case: P0-T08-TC01..TC10 + kế hoạch subtask — đã được duyệt (AT07–AT09 ✅ theo unit test P0-T06, AT11 giữ manual)
+  - [x] 2. Code (từ 2.3 làm liền theo yêu cầu người dùng "hoàn thành luôn P0")
+    - [x] 2.1 Nhúng migration: `db/core/migrations` với `//go:embed *.sql`
+    - [x] 2.2 Integration test đầu tiên bằng testcontainers-go, tag Docker cho Bazel
+    - [x] 2.3 Helper `internal/pgtest`: `TestMain`, goose + database template, `NewDB(t)`
+    - [x] 2.4 Integration test `/readyz` (P0-AT02, AT03)
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `test(core): testcontainers-go framework for PG integration tests [P0-T08]` · Push: có
 
 ### infra
 - [ ] **P0-T09** Makefile: `up`, `down`, `migrate`, `test`, `gazelle`

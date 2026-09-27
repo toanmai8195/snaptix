@@ -1,0 +1,19 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "pgtest",
+    srcs = ["pgtest.go"],
+    importpath = "github.com/toanmai8195/snaptix/com/tm/server/services/core/internal/pgtest",
+    visibility = ["//services/core:__subpackages__"],
+    deps = [
+        "//db/core/migrations",
+        "@com_github_docker_docker//api/types/container",
+        "@com_github_docker_go_connections//nat",
+        "@com_github_jackc_pgx_v5//:pgx",
+        "@com_github_jackc_pgx_v5//pgxpool",
+        "@com_github_jackc_pgx_v5//stdlib",
+        "@com_github_pressly_goose_v3//:goose",
+        "@com_github_testcontainers_testcontainers_go//:testcontainers-go",
+        "@com_github_testcontainers_testcontainers_go_modules_postgres//:postgres",
+    ],
+)

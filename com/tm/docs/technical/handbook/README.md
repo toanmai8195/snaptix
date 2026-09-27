@@ -33,6 +33,7 @@ handbook/
 | P0-T05 | Skeleton core: HTTP server, chi, config, slog, pgxpool, /readyz | [phase-0/P0-T05.md](phase-0/P0-T05.md) |
 | P0-T06 | Graceful shutdown: SIGTERM, Shutdown có timeout, đóng pool sau cùng | [phase-0/P0-T06.md](phase-0/P0-T06.md) |
 | P0-T07 | Image OCI cho core: macro com_tm_go_image, rules_oci, distroless | [phase-0/P0-T07.md](phase-0/P0-T07.md) |
+| P0-T08 | Khung testcontainers-go cho integration test với PG | [phase-0/P0-T08.md](phase-0/P0-T08.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -66,6 +67,11 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `docker/oci` `bazel/rules_oci` | P0-T07 | Image = config + layer tar; distroless static; pin digest; Linux-only target; build tái lập | [P0-T07](phase-0/P0-T07.md#image-oci-không-cần-dockerfile-rules_oci-distroless-static-pin-digest) |
 | `bazel/starlark` `bazel/macro` | P0-T07 | Macro `com_tm_go_image` + `_container_targets` (cấu trúc thor); `native.package_name()`; legacy vs symbolic macro | [P0-T07](phase-0/P0-T07.md#macro-com_tm_go_image-theo-cấu-trúc-thor) |
 | `bazel/gazelle` | P0-T07 | `map_kind` go_binary → com_tm_go_image; gazelle giữ attr lạ | [P0-T07](phase-0/P0-T07.md#gazelle-map_kind-mọi-binary-tự-có-image) |
+| `go/embed` `bazel` | P0-T08 | `go:embed` cho migration: chạy giống nhau ở `go test` và Bazel | [P0-T08](phase-0/P0-T08.md#goembed-cho-migration) |
+| `docker/testcontainers` `go/testing` | P0-T08 | Wait strategy PG, cổng ngẫu nhiên, Ryuk dọn container | [P0-T08](phase-0/P0-T08.md#testcontainers-go-wait-strategy-cổng-ngẫu-nhiên-dọn-container) |
+| `pg/template-database` `go/testing` | P0-T08 | `TestMain` một container; `CREATE DATABASE ... TEMPLATE` cho từng test; goose làm thư viện | [P0-T08](phase-0/P0-T08.md#một-container-cho-cả-package-database-template-cho-từng-test) |
+| `docker/testcontainers` `pg/pgx` | P0-T08 | Test dừng/bật PG: container riêng, cổng host cố định, `eventually` | [P0-T08](phase-0/P0-T08.md#test-phá-hạ-tầng-container-riêng-cổng-host-cố-định) |
+| `bazel` `go/testing` | P0-T08 | Tag `requires-docker`, `size = "large"`, lọc bằng `--test_tag_filters` | [P0-T08](phase-0/P0-T08.md#tag-bazel-cho-test-cần-docker) |
 
 ## Mẫu một file
 
