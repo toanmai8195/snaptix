@@ -11,9 +11,11 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 - **Trong**: cấu trúc repo, Docker Compose, migration tool, CI, lint/format, skeleton service, logging/tracing/metrics.
 - **Ngoài**: mọi logic nghiệp vụ.
 
+> Các task Node/React còn lại của Phase 0 (OTel Node, dừng êm Fastify, skeleton web, config TS, Vitest) đã chuyển sang Phase 7 và Phase 9 để mỗi chặng chỉ học một công nghệ.
+
 ## Workstream
 
-`infra` · `core` · `bff` · `web` · `qa`
+`infra` · `core` · `bff` · `qa`
 
 ## Requirement
 
@@ -24,7 +26,7 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 | P0-FR3 | FR | `core` và `bff` có `/healthz` (sống) và `/readyz` (kết nối được DB) |
 | P0-FR4 | FR | CI chạy lint, build, test cho Go và TS trên mỗi PR |
 | P0-NFR1 | NFR | Log dạng JSON, có `trace_id`, `request_id` |
-| P0-NFR2 | NFR | Trace truyền từ `bff` sang `core` qua `traceparent` |
+| P0-NFR2 | NFR | Trace truyền qua `traceparent` (W3C) — core nhận và nối trace; phía bff kiểm chứng ở Phase 7 |
 | P0-NFR3 | NFR | Service dừng an toàn khi nhận SIGTERM, không cắt ngang request |
 
 ## Task
@@ -132,23 +134,15 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
   - [x] 4. Build + unit test pass
   - [x] 5. Test case pass + handbook
   - [x] 6. Commit: `feat(bff): Fastify + TypeScript skeleton with config, pino JSON, health [P0-T11]` · Push: sau khi xong P0 (tự commit theo chỉ đạo người dùng)
-- [ ] **P0-T12** OTel cho Node, gọi thử `core /healthz` để kiểm tra trace xuyên service `[G10]`
-- [ ] **P0-T13** Graceful shutdown Fastify (`close` hooks)
-
-### web
-- [ ] **P0-T14** Skeleton `web-client`, `web-admin` bằng Vite + React + TS + Tailwind + shadcn/ui
-- [ ] **P0-T15** `com/tm/app/packages/config`: eslint, prettier, tsconfig dùng chung
 
 ### qa
-- [ ] **P0-T16** Khung testcontainers-go cho integration test với PG
-- [ ] **P0-T17** Khung Vitest cho TS
+- [ ] **P0-T12** Khung testcontainers-go cho integration test với PG
 
 ## Challenge
 
 | # | Công nghệ | Challenge | Bối cảnh | Hướng giải | Hoàn thành khi | Trạng thái |
 |---|---|---|---|---|---|---|
 | G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | 🟨 |
-| G10 | Golang | Observability | Debug trên nhiều service | OpenTelemetry trace, slog JSON, Prometheus metrics | Một trace hiển thị đủ BFF → core → PG | 🟨 |
 | G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng | 🟨 |
 
 ## Definition of Done
@@ -156,7 +150,6 @@ Dựng khung monorepo, hạ tầng local, CI và observability để mọi phase
 - [ ] Clone repo mới → `make up && make migrate` chạy thành công trong < 5 phút
 - [ ] CI xanh trên nhánh `main`; sửa một file trong `com/tm/app` không kích hoạt `bazel test` và ngược lại
 - [ ] `go test ./...` và `bazel test //...` trong `com/tm/server` đều pass
-- [ ] Gọi `bff /healthz?deep=1` → thấy **một trace** gồm span của bff và core trên Grafana
 - [ ] Gửi SIGTERM khi đang có request chậm → request hoàn thành, service thoát sạch
 - [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
