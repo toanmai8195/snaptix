@@ -1,0 +1,62 @@
+# CI của snaptix. Workflow chỉ gọi script trong scripts/ci/ — chạy local y hệt:
+#   scripts/ci/run.sh server [BASE]   (hoặc: make test)
+name: CI
+
+on:
+  push: # mọi nhánh: push nhánh thử cũng có CI (repo chưa dùng PR thường xuyên)
+  pull_request:
+
+permissions:
+  contents: read # chỉ đọc code; không cần quyền ghi
+
+# Push mới lên cùng nhánh / PR → huỷ lần chạy cũ đang dở.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Lọc đường dẫn ở mức job (không dùng on.paths) để một workflow có nhiều job,
+  # job không liên quan hiện "skipped" thay vì không có trạng thái.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      server: ${{ steps.filter.outputs.server }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            server:
+              - 'com/tm/server/**'
+              - '.github/**'
+              - 'scripts/ci/**'
+
+  server:
+    needs: changes
+    if: needs.changes.outputs.server == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # cần lịch sử để git diff BASE...HEAD chọn test bị ảnh hưởng
+
+      # Go cho golangci-lint (go run) — phiên bản lấy từ go.mod; Bazel dùng Go SDK riêng.
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: com/tm/server/go.mod
+          cache-dependency-path: com/tm/server/go.sum
+
+      # Bazelisk (đọc .bazelversion) + cache giữa các lần chạy.
+      - uses: bazel-contrib/setup-bazel@0.19.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-server
+          repository-cache: true
+
+      - name: scripts/ci/run.sh server
+        env:
+          # PR: so với base của PR. Push: so với commit trước khi push (toàn số 0 nếu nhánh mới → test hết).
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: scripts/ci/run.sh server "$BASE"

@@ -1,0 +1,11 @@
+# golangci-lint v2 — chạy qua scripts/ci/run.sh (pin v2.6.2, không cần cài):
+#   go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.2 run ./...
+version: "2"
+
+linters:
+  # standard = errcheck, govet, ineffassign, staticcheck, unused — bộ mặc định, ít báo nhầm.
+  default: standard
+
+formatters:
+  enable:
+    - gofmt # code chưa gofmt → lỗi

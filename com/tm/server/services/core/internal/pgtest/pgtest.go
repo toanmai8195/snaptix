@@ -103,7 +103,7 @@ func migrate(ctx context.Context, dsn string) error {
 		return err
 	}
 	// Đóng ngay khi xong: PG không cho dùng một database làm template khi còn kết nối vào nó.
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	provider, err := goose.NewProvider(goose.DialectPostgres, db, migrations.FS)
 	if err != nil {
@@ -252,7 +252,7 @@ func dockerAvailable() (ok bool) {
 	if err != nil {
 		return false
 	}
-	defer provider.Close()
+	defer func() { _ = provider.Close() }()
 	return provider.Health(context.Background()) == nil
 }
 

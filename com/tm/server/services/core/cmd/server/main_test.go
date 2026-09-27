@@ -67,7 +67,7 @@ func get(url string) <-chan result {
 			ch <- result{err: err}
 			return
 		}
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 		b, err := io.ReadAll(resp.Body)
 		ch <- result{status: resp.StatusCode, body: string(b), err: err}
 	}()
@@ -135,7 +135,7 @@ func TestServeRejectsNewConnectionsDuringShutdown(t *testing.T) {
 		if err != nil {
 			break // listener đã đóng
 		}
-		conn.Close()
+		_ = conn.Close()
 		if time.Now().After(deadline) {
 			t.Fatal("vẫn kết nối mới được sau khi bắt đầu shutdown")
 		}
@@ -180,7 +180,7 @@ func TestServeListenerError(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ln.Close()
+	_ = ln.Close() // đóng trước để Serve lỗi ngay
 
 	logger := slog.New(slog.NewJSONHandler(io.Discard, nil))
 	err = serve(context.Background(), &http.Server{ReadHeaderTimeout: time.Second}, ln, time.Second, logger)
