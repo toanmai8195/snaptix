@@ -18,7 +18,7 @@ type pinger interface {
 
 // healthz (liveness): process còn sống và phục vụ được HTTP. Không kiểm tra dependency.
 func healthz(w http.ResponseWriter, _ *http.Request) {
-	_, _ = io.WriteString(w, "ok") // lỗi ghi = client đã ngắt, không còn gì để làm
+	io.WriteString(w, "ok") // lỗi ghi = client đã ngắt, không còn gì để làm
 }
 
 // readyz (readiness): sẵn sàng nhận traffic — ping được DB trong readyTimeout.
