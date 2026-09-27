@@ -16,8 +16,8 @@ git clone <repo-url> snaptix && cd snaptix
 
 # 1 + 2. Hạ tầng + migration (xem `make` để biết mọi lệnh)
 make up        # = docker compose -f deploy/docker-compose.yml up -d --wait
-make migrate   # = scripts/migrate.sh core up && scripts/migrate.sh analytics up
-# tạo migration mới: scripts/migrate.sh core create <ten> sql   (đánh số tuần tự)
+make migrate   # = scripts/migrate.sh up   (PG core; PG analytics thêm ở Phase 6)
+# tạo migration mới: scripts/migrate.sh create <ten> sql   (đánh số tuần tự)
 
 # 3. Server (Go) — chạy trực tiếp bằng go khi dev
 cd com/tm/server

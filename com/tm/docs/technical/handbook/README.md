@@ -28,6 +28,7 @@ handbook/
 |---|---|---|
 | P0-T01 | Cấu trúc thư mục com/tm/server, .gitignore cho Go/Bazel | [phase-0/P0-T01.md](phase-0/P0-T01.md) |
 | P0-T02 | docker-compose chỉ có PostgreSQL core | [phase-0/P0-T02.md](phase-0/P0-T02.md) |
+| P0-T03 | goose migration cho PG core | [phase-0/P0-T03.md](phase-0/P0-T03.md) |
 
 ## Chỉ mục theo chủ đề
 
@@ -39,6 +40,9 @@ Tag gợi ý: `go/channel` · `go/errgroup` · `go/context` · `go/generics` · 
 | `git` | P0-T01 | Cú pháp `.gitignore`; `git check-ignore -v --no-index` | [P0-T01](phase-0/P0-T01.md#cú-pháp-gitignore-và-git-check-ignore) |
 | `docker` `pg` | P0-T02 | Container tạm thời; named volume, `down` vs `down -v` | [P0-T02](phase-0/P0-T02.md#container-là-tạm-thời--named-volume-giữ-dữ-liệu) |
 | `docker/compose` | P0-T02 | Healthcheck + `up --wait`; `$$` trong healthcheck | [P0-T02](phase-0/P0-T02.md#healthcheck--up---wait-đang-chạy--sẵn-sàng) |
+| `pg/migration` | P0-T03 | Migration vs initial script; cơ chế bảng version + transaction DDL của PG | [P0-T03](phase-0/P0-T03.md#cơ-chế-goose-bảng-version--transaction-của-pg) |
+| `go/tooling` | P0-T03 | `go run pkg@version`, build tag, `GOTOOLCHAIN=local` | [P0-T03](phase-0/P0-T03.md#pin-công-cụ-go-bằng-go-run-pkgversion) |
+| `bash` | P0-T03 | `set -euo pipefail`, `${VAR:-default}`, `"$@"`, ROOT theo vị trí script | [P0-T03](phase-0/P0-T03.md#bash-script-an-toàn) |
 
 ## Mẫu một file
 

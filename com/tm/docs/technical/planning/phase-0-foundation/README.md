@@ -56,7 +56,16 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
   - [x] 6. Commit: `build(deploy): docker-compose with PostgreSQL core [P0-T02]` · Push: không
 
 ### db
-- [ ] **P0-T03** goose migration cho PG core: `scripts/migrate.sh`, migration rỗng đầu tiên
+- [x] **P0-T03** goose migration cho PG core: `scripts/migrate.sh`, migration rỗng đầu tiên
+  - [x] 1. Test case: P0-T03-TC01..TC05 + kế hoạch subtask — đã được duyệt
+  - [x] 2. Code
+    - [x] 2.1 Chạy goose bằng `go run ...@v3.26.0`
+    - [x] 2.2 Migration `00001_init.sql`, chạy up/status/down thủ công
+    - [x] 2.3 Gói vào `scripts/migrate.sh`
+  - [x] 3. Unit test
+  - [x] 4. Build + unit test pass
+  - [x] 5. Test case pass + handbook
+  - [x] 6. Commit: `build(db): goose migrations for PG core [P0-T03]` · Push: không
 
 ### core
 - [ ] **P0-T04** Bazel + Gazelle + một `go.mod` cho `com/tm/server` `[G14]`
