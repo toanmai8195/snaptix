@@ -50,7 +50,10 @@ server() {
     echo "Không có test nào bị ảnh hưởng."
   else
     printf '  %s\n' "${targets[@]}"
-    bazel test "${targets[@]}" || fail "bazel test lỗi"
+    local test_flags=()
+    # Trên CI: integration test không được skip vì thiếu Docker (xem pgtest.Run).
+    [[ -n "${GITHUB_ACTIONS:-}" ]] && test_flags+=(--test_env=PGTEST_REQUIRE_DOCKER=1)
+    bazel test "${test_flags[@]+"${test_flags[@]}"}" "${targets[@]}" || fail "bazel test lỗi"
   fi
 
   [[ -n "${GITHUB_ACTIONS:-}" ]] && echo "::endgroup::"
