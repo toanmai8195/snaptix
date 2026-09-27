@@ -5,7 +5,7 @@
 ## Yêu cầu
 
 - Docker + Docker Compose
-- Go 1.23+, Bazelisk (đọc phiên bản Bazel từ `.bazelversion`)
+- Go 1.24.1 (theo `com/tm/server/go.mod`), Bazelisk (đọc phiên bản Bazel từ `.bazelversion`: 8.7.0)
 - Node.js 22+ và pnpm
 - Không cần cài goose: `scripts/migrate.sh` chạy goose đã pin bằng `go run`
 
@@ -21,11 +21,10 @@ make migrate   # = scripts/migrate.sh up   (PG core; PG analytics thêm ở Phas
 
 # 3. Server (Go) — chạy trực tiếp bằng go khi dev
 cd com/tm/server
-go run ./services/core/cmd/server
-go run ./services/core/cmd/worker          # terminal khác
-go run ./services/stats-worker/cmd/worker  # terminal khác
+go run ./services/core/cmd/server          # curl localhost:8080/readyz → 200; Ctrl-C dừng êm
+# (từ Phase sau) go run ./services/core/cmd/worker, go run ./services/stats-worker/cmd/worker
 
-# 4. App (Node + React)
+# 4. App (Node + React) — từ chặng C
 cd com/tm/app
 pnpm install
 pnpm dev   # chạy song song bff, web-client, web-admin
@@ -33,7 +32,7 @@ pnpm dev   # chạy song song bff, web-client, web-admin
 
 ## Biến môi trường
 
-Sao chép `.env.example` thành `.env` ở mỗi app/service.
+Core đọc thẳng biến môi trường, có mặc định cho local (Phase 0 dùng 4 biến `CORE_HTTP_ADDR`, `CORE_DATABASE_URL`, `LOG_LEVEL`, `CORE_SHUTDOWN_TIMEOUT`; các biến khác dành cho phase sau).
 
 | Biến | Dùng bởi | Ví dụ |
 |---|---|---|

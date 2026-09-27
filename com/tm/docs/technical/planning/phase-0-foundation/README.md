@@ -155,19 +155,19 @@ Go: module, package `main`, `net/http`, chi, `context`, `slog`, `signal` · PG: 
 | # | Công nghệ | Challenge | Bối cảnh | Hướng giải | Hoàn thành khi | Trạng thái |
 |---|---|---|---|---|---|---|
 | G3 | Golang | Graceful shutdown | Deploy khi đang có giao dịch | Bắt SIGTERM, ngừng nhận request, chờ in-flight, đóng pool theo thứ tự | Rolling deploy dưới tải không mất/không lỗi request | 🟨 |
-| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng; core build được thành image | 🟨 |
+| G14 | Golang | Monorepo Go với Bazel | `com/tm/server` nhiều service + thư viện | rules_go + Gazelle + bzlmod, một `go.mod`, visibility, test theo target bị ảnh hưởng | Code build được bằng cả `go` và Bazel; CI chỉ test target bị ảnh hưởng; core build được thành image | ✅ |
 
 ## Definition of Done
 
-- [ ] Clone repo mới → `make up && make migrate` chạy thành công trong < 5 phút
-- [ ] Core chạy được bằng `go run` và bằng image Docker; `/readyz` phản ánh đúng trạng thái PG
-- [ ] Gửi SIGTERM khi đang có request chậm → request hoàn thành, service thoát sạch
-- [ ] CI xanh trên `main`
+- [x] Clone repo mới → `make up && make migrate` chạy thành công trong < 5 phút (3.8s, P0-AT01)
+- [x] Core chạy được bằng `go run` và bằng image Docker; `/readyz` phản ánh đúng trạng thái PG
+- [x] Gửi SIGTERM khi đang có request chậm → request hoàn thành, service thoát sạch
+- [x] CI xanh trên `main`
 - [ ] Mọi test nghiệm thu trong [acceptance-tests.md](acceptance-tests.md) và test case của các task trong [tasks/](tasks/) pass
 
 ## Checklist đóng phase
 
-- [ ] Cập nhật [local-setup](../../local-setup.md) theo thực tế
-- [ ] ADR: Bazel cho Go + pnpm cho TS; công cụ migration
+- [x] Cập nhật [local-setup](../../local-setup.md) theo thực tế
+- [x] ADR: Bazel cho Go + pnpm cho TS ([ADR-0002](../../adr/0002-bazel-go-pnpm-ts.md)); công cụ migration ([ADR-0003](../../adr/0003-goose-migrations.md))
 - [ ] Viết [lessons-learned.md](lessons-learned.md)
 - [ ] Cập nhật trạng thái phase trong [planning](../README.md)
